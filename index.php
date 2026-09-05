@@ -127,6 +127,10 @@
                     Menu
                 </a>
 
+                //logout button partial placement and design
+                <a href="logout.php">
+                <button type="button">Logout</button>
+                </a>
 
             </div>
 
