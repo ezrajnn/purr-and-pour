@@ -1,6 +1,4 @@
-/* =========================================================
-   FONT
-========================================================= */
+/* Font */
 
 @font-face {
     font-family: "Source Sans 3 Black";
@@ -9,7 +7,6 @@
     font-style: normal;
 }
 
-
 @font-face {
     font-family: "Cormorat Garamond";
     src: url("fonts/CormoratGaramond.ttf") format("truetype");
@@ -17,1060 +14,585 @@
     font-style: normal;
 }
 
-
-/* =========================================================
-   RESET
-========================================================= */
-
+/* Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-
 html {
     scroll-behavior: smooth;
 }
 
-
-/* =========================================================
-   BODY
-========================================================= */
-
+/* Body */
 body {
     font-family: "Source Sans 3 Black", sans-serif;
     background-color: #F4F0E8;
 }
 
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
+/* Navigation Section */
 header {
     width: 100%;
     background-color: #F4F0E8;
 }
 
-
 .navbar {
     height: 90px;
-
     max-width: 1120px;
-
     margin: 0 auto;
-
     padding: 0 20px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 }
 
-
-/* =========================================================
-   LOGO
-========================================================= */
-
+/* Logo */
 .logo img {
     width: 72px;
     height: auto;
     display: block;
 }
 
-
-/* =========================================================
-   NAVIGATION LINKS
-========================================================= */
-
 .nav-links {
     display: flex;
-
     align-items: center;
-
     gap: 34px;
-
     list-style: none;
 }
 
-
 .nav-links a {
     font-family: "Source Sans 3 Black", sans-serif;
-
     font-size: 16px;
-
     font-weight: 900;
-
     color: #000000;
-
     text-decoration: none;
-
     transition: 0.3s;
 }
-
 
 .nav-links a:hover {
     color: #D79A63;
 }
 
-
 .nav-links .active {
     color: #D79A63;
 }
 
-
-/* =========================================================
-   NAVIGATION ORDER BUTTON
-========================================================= */
-
 .nav-order {
     min-width: 130px;
-
     height: 44px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     background-color: #5b4530;
-
     color: white;
-
     text-decoration: none;
-
     border-radius: 30px;
-
     font-family: "Source Sans 3 Black", sans-serif;
-
     font-size: 15px;
-
     font-weight: 900;
-
     transition: 0.3s;
 }
-
 
 .nav-order:hover {
     background-color: #D79A63;
 }
 
-
-/* =========================================================
-   HERO SECTION
-========================================================= */
-
+/* Hero Section */
 .hero {
     width: 100%;
-
     height: 570px;
-
     position: relative;
-
     display: flex;
-
     background-color: #D79A63;
-
     overflow: hidden;
 }
 
-
-/* =========================================================
-   HERO CONTENT
-========================================================= */
-
 .hero-content {
     width: 55%;
-
     padding: 65px 0 40px 65px;
-
     position: relative;
-
     z-index: 10;
 }
 
 
-/* =========================================================
-   HERO TITLE
-========================================================= */
-
 .hero-content b {
     display: block;
-
     width: 610px;
-
     font-family: "Source Sans 3 Black", sans-serif;
-
     font-size: 66px;
-
     font-weight: 900;
-
     line-height: 1.03;
-
     color: white;
-
     margin: 0;
 }
 
-
-/* =========================================================
-   HERO SUBTITLE
-========================================================= */
-
 .hero-content h2 {
     font-family: "Source Sans 3 Black", sans-serif;
-
     font-size: 30px;
-
     font-weight: 900;
-
     font-style: italic;
-
     line-height: 1;
-
     color: white;
-
     margin-top: 5px;
-
     margin-bottom: 25px;
 }
 
-
-/* =========================================================
-   HERO DESCRIPTION
-========================================================= */
-
 .hero-content p {
     width: 520px;
-
     font-family: "Cormorat Garamond", serif;
-
     font-size: 18px;
-
     line-height: 1.45;
-
     color: #5b4530;
-
     margin-bottom: 28px;
 }
 
-
-/* =========================================================
-   HERO BUTTONS
-========================================================= */
-
 .hero-buttons {
     display: flex;
-
     align-items: center;
-
     gap: 42px;
 }
-
 
 .order-btn,
 .menu-btn {
     width: 150px;
-
     height: 42px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     border-radius: 25px;
-
     text-decoration: none;
-
     font-family: "Source Sans 3 Black", sans-serif;
-
     font-size: 13px;
-
     font-weight: 900;
-
     transition: 0.3s;
 }
 
-
-/* ORDER NOW */
-
 .order-btn {
     background-color: #5b4530;
-
     color: white;
-
     border: 2px solid #5b4530;
-
     box-shadow: 0 3px 3px rgba(0, 0, 0, 0.20);
 }
-
 
 .order-btn:hover {
     background-color: #c98245;
-
     border-color: #c98245;
 }
 
-
-/* MENU */
-
 .menu-btn {
     background-color: transparent;
-
     color: white;
-
     border: 2px solid #5b4530;
-
     box-shadow: 0 3px 3px rgba(0, 0, 0, 0.20);
 }
-
 
 .menu-btn:hover {
     background-color: #5b4530;
 }
 
 
-/* =========================================================
-   HERO IMAGES
-========================================================= */
-
 .image {
     width: 50%;
-
     height: 100%;
-
     position: absolute;
-
     top: 0;
-
     right: 0;
-
     z-index: 2;
 }
 
-
-/* COFFEE */
-
 .frappe {
     width: 850px;
-
     height: auto;
-
     position: absolute;
-
     top: -120px;
     right: -5px;
-
     z-index: 1;
 }
 
-
-/* LEFT CAT GROUP */
-
 .cats {
     width: 380px;
-
     height: auto;
-
     position: absolute;
-
     right: 130px;
     bottom: -5px;
     z-index: 4;
 }
 
-
-/* RIGHT CAT GROUP */
-
 .iring2 {
     width: 310px;
-
     height: auto;
-
     position: absolute;
     right: 380px;
     bottom: -1px;
-
     z-index: 5;
 }
 
-
-/* =========================================================
-   BESTSELLER SECTION
-========================================================= */
-
+/* Bestseller Section */
 .bestseller-section {
     width: 100%;
-
     background-color: #F4F0E8;
-
     padding: 30px 55px 55px;
 }
 
-
-/* =========================================================
-   BESTSELLER HEADER
-========================================================= */
-
 .bestseller-header {
     width: 100%;
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     margin-bottom: 35px;
 }
 
-
 .bestseller-header h2 {
     font-family: "Cormorat Garamond", serif;
-
     font-size: 45px;
-
     font-weight: 900;
-
     color: #5b4530;
 }
 
-
-/* =========================================================
-   FULL MENU BUTTON
-========================================================= */
-
 .fullmenu-btn {
     min-width: 165px;
-
     height: 45px;
-
     padding: 0 20px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     background-color: #5b4530;
-
     color: white;
-
     text-decoration: none;
-
     border-radius: 30px;
-
     font-size: 13px;
-
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.20);
-
     transition: 0.3s;
 }
-
 
 .fullmenu-btn:hover {
     background-color: #D79A63;
 }
 
-
-/* =========================================================
-   BESTSELLER CARDS
-========================================================= */
-
 .bestseller-cards {
     width: 100%;
-
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
     gap: 35px;
 }
 
-
-/* =========================================================
-   DRINK CARD
-========================================================= */
-
 .drink-card {
     width: 220px;
-
     height: 300px;
-
     background-color: #D79A63;
-
     border-radius: 25px 25px 15px 15px;
-
     overflow: hidden;
-
     box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.25);
-
     flex-shrink: 0;
 }
 
-
-/* =========================================================
-   DRINK IMAGE
-========================================================= */
-
 .drink-image {
     width: 100%;
-
     height: 225px;
-
     background-color: white;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     overflow: hidden;
-
     border-radius: 25px;
 }
 
-
 .drink-image img {
     width: 88%;
-
     height: 88%;
-
     object-fit: contain;
-
     display: block;
 }
 
-
-/* =========================================================
-   CLICKABLE DRINK INFO
-========================================================= */
-
 .drink-info {
     width: 100%;
-
     height: 75px;
-
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
-
     justify-content: center;
-
     background-color: #D79A63;
-
     text-decoration: none;
-
     transition: 0.3s;
 }
 
-
 .drink-info h3 {
     font-size: 15px;
-
     color: white;
-
     text-align: center;
-
     margin: 0;
 }
 
-
 .drink-info p {
     font-size: 16px;
-
     color: white;
-
     margin-top: 5px;
 }
-
 
 .drink-info:hover {
     background-color: #5b4530;
 }
 
 
-/* =========================================================
-   CAT LOUNGE
-========================================================= */
-
+/* Lounge Section */
 .lounge-section {
     width: 100%;
-
     min-height: 500px;
-
     display: flex;
-
     align-items: stretch;
-
     background-color: white;
 }
 
-
-/* =========================================================
-   CAT LOUNGE CONTENT
-========================================================= */
-
 .lounge-content {
     width: 50%;
-
     padding: 35px 60px;
-
     display: flex;
-
     flex-direction: column;
-
     justify-content: center;
 }
-
 
 .lounge-content h2 {
     font-family: "Source Sans 3 Black", sans-serif;
-
     font-size: 60px;
-
     color: #5b4530;
 }
 
-
-/* LINE */
-
 .lounge-line {
     width: 100%;
-
     max-width: 400px;
-
     height: 1px;
-
     background-color: #b8a99b;
-
     margin-top: 15px;
-
     margin-bottom: 25px;
 }
-
-
-/* DESCRIPTION */
 
 .lounge-content p {
     width: 100%;
-
     max-width: 500px;
-
     font-family: "Cormorat Garamond", serif;
-
     font-size: 18px;
-
     line-height: 1.35;
-
     color: #5a3d28;
-
     margin-bottom: 25px;
 }
 
-
-/* BUTTON */
-
 .lounge-btn {
     width: fit-content;
-
     height: 46px;
-
     padding: 0 18px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     background-color: #5b4530;
-
     color: white;
-
     text-decoration: none;
-
     border-radius: 25px;
-
     font-size: 13px;
-
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
-
     transition: 0.3s;
 }
-
 
 .lounge-btn:hover {
     background-color: #c98245;
 }
 
-
-/* =========================================================
-   CAT LOUNGE IMAGE
-========================================================= */
-
 .lounge-image {
     width: 50%;
-
     min-height: 500px;
-
     overflow: hidden;
 }
-
 
 .lounge-image img {
     width: 100%;
-
     height: 100%;
-
     object-fit: cover;
-
     display: block;
 }
 
-
-/* =========================================================
-   CAT PROFILE SECTION
-========================================================= */
-
+/* Cat Profile Section */
 .cat-profile-section {
     width: 100%;
-
     min-height: 820px;
-
     background-color: #D79A63;
-
     padding: 35px 55px 55px;
 }
 
-
-/* =========================================================
-   CAT PROFILE HEADER
-========================================================= */
-
 .cat-profile-header {
     width: 100%;
-
     max-width: 1140px;
-
     margin: 0 auto;
 }
-
 
 .cat-profile-header h2 {
     font-family: "Source Sans 3 Black", sans-serif;
-
     font-size: 45px;
-
     font-weight: 900;
-
     line-height: 1;
-
     color: #5b4530;
 }
 
-
 .cat-profile-line {
     width: 78%;
-
     height: 1px;
-
     background-color: rgba(91, 69, 48, 0.45);
-
     margin-top: 12px;
-
     margin-bottom: 12px;
 }
 
-
 .cat-profile-header p {
     font-family: "Cormorat Garamond", serif;
-
     font-size: 17px;
-
     color: #5a3d28;
-
     margin-bottom: 30px;
 }
 
-
-/* =========================================================
-   CAT PROFILE GRID
-========================================================= */
-
 .cat-profile-grid {
     width: 100%;
-
     max-width: 1140px;
-
     margin: 0 auto;
-
     display: grid;
-
     grid-template-columns: repeat(4, 1fr);
-
     column-gap: 32px;
-
     row-gap: 35px;
 }
 
-
-/* =========================================================
-   CAT POLAROID
-========================================================= */
-
 .cat-profile-card {
     width: 100%;
-
     height: 300px;
-
     background-color: #F4F0E8;
-
     padding: 12px 12px 0;
-
     display: flex;
-
     flex-direction: column;
-
     overflow: hidden;
 }
-
-
-/* =========================================================
-   POLAROID PHOTO
-========================================================= */
 
 .cat-photo {
     width: 100%;
-
     height: 235px;
-
     background-color: white;
-
     display: flex;
-
     align-items: flex-end;
-
     justify-content: center;
-
     overflow: hidden;
 }
 
-
 .cat-photo img {
     width: 100%;
-
     height: 100%;
-
     object-fit: contain;
-
     object-position: center bottom;
-
     display: block;
 }
 
-
-/* =========================================================
-   CAT NAME AREA
-========================================================= */
 .cat-name {
     width: 100%;
     height: 53px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     position: relative;
-
     padding: 0;
 }
-
-
-/* PAW STAYS ON LEFT */
 
 .paw-image {
     width: 37px;
     height: 37px;
-
     object-fit: contain;
     display: block;
-
     position: absolute;
     left: 3px;
 }
 
-
-/* CAT NAME EXACTLY CENTERED */
-
 .cat-name h3 {
     width: 100%;
-
     font-family: "Source Sans 3 Black", sans-serif;
     font-size: 21px;
     font-weight: 900;
-
     text-align: center;
-
     color: #5b4530;
-
     margin: 0;
     padding: 0;
 }
 
-/* =========================================================
-   ABOUT US
-========================================================= */
-
+/* About us Section */
 .about-section {
     width: 100%;
-
     min-height: 500px;
-
     display: flex;
-
     align-items: stretch;
-
     background-color: #F4F0E8;
 }
-
-
-/* =========================================================
-   ABOUT CONTENT
-========================================================= */
 
 .about-content {
     width: 50%;
-
     padding: 35px 60px;
-
     display: flex;
-
     flex-direction: column;
-
     justify-content: center;
-
     background-color: #F4F0E8;
 }
 
-
 .about-content h3 {
     font-family: "Source Sans 3 Black", sans-serif;
-
     font-size: 60px;
-
     color: #5b4530;
 }
 
-
 .about-line {
     width: 100%;
-
     max-width: 400px;
-
     height: 1px;
-
     background-color: #b8a99b;
-
     margin-top: 15px;
-
     margin-bottom: 25px;
 }
-
 
 .about-content p {
     width: 100%;
-
     max-width: 500px;
-
     font-family: "Cormorat Garamond", serif;
-
     font-size: 18px;
-
     line-height: 1.35;
-
     color: #5a3d28;
-
     margin-bottom: 25px;
 }
 
-
-/* =========================================================
-   ABOUT BUTTON
-========================================================= */
-
 .about-btn {
     width: fit-content;
-
     height: 46px;
-
     padding: 0 18px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     background-color: #5b4530;
-
     color: white;
-
     text-decoration: none;
-
     border-radius: 25px;
-
     font-size: 13px;
-
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
-
     transition: 0.3s;
 }
-
 
 .about-btn:hover {
     background-color: #c98245;
 }
 
-
-/* =========================================================
-   ABOUT IMAGE
-========================================================= */
-
 .about-image {
     width: 50%;
-
     height: 500px;
-
     overflow: hidden;
 }
 
-
 .about-image img {
     width: 100%;
-
     height: 100%;
-
     object-fit: cover;
-
     display: block;
 }
 
-/* =========================================================
-   REVIEWS SECTION
-========================================================= */
+/* Reviews Section */
 .reviews-section {
     width: 100%;
     background-color: #ffffff;
@@ -1082,8 +604,6 @@ header {
     max-width: none;
     margin: 0;
 }
-
-/* REVIEW HEADER */
 
 .reviews-header {
     width: 100%;
@@ -1106,24 +626,18 @@ header {
     min-width: 170px;
     height: 45px;
     padding: 0 20px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background-color: #5b4530;
     color: #ffffff;
-
     border: none;
     border-radius: 30px;
-
     font-family: "Source Sans 3 Black", sans-serif;
     font-size: 13px;
     font-weight: 900;
-
     text-decoration: none;
     cursor: pointer;
-
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.20);
     transition: 0.3s;
 }
@@ -1131,8 +645,6 @@ header {
 .btn-view-all:hover {
     background-color: #D79A63;
 }
-
-/* REVIEW CARDS */
 
 .reviews-grid {
     width: 100%;
@@ -1144,14 +656,11 @@ header {
 .review-card {
     min-height: 220px;
     background-color: #F4F0E8;
-
     border-radius: 25px;
     padding: 18px 22px 18px;
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
     box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.20);
 }
 
@@ -1212,167 +721,83 @@ header {
     color: #000000;
 }
 
-/* RESPONSIVE REVIEW SECTION */
-
-@media (max-width: 900px) {
-    .reviews-section {
-        padding: 35px 30px 60px;
-    }
-
-    .reviews-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .reviews-header h2 {
-        font-size: 38px;
-    }
-}
-
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
+/* Footer Section */
 .footer {
     width: 100%;
-
     min-height: 220px;
-
     background-color: #D79A63;
-
     display: flex;
-
     justify-content: center;
-
     align-items: flex-start;
-
     gap: 90px;
-
     padding: 25px 60px;
 }
-
-
-/* =========================================================
-   FOOTER BRAND
-========================================================= */
 
 .footer-brand {
     width: 210px;
 }
 
-
 .footer-brand img {
     width: 110px;
-
     height: auto;
-
     display: block;
-
     margin-bottom: 10px;
 }
 
-
 .footer-brand p {
     font-family: "Cormorat Garamond", serif;
-
     font-size: 18px;
-
     color: #000000;
-
     margin: 6px 0;
 }
 
-
-/* =========================================================
-   SOCIALS
-========================================================= */
-
 .socials {
     display: flex;
-
     gap: 8px;
-
     margin-top: 10px;
 }
 
-
 .socials a {
     width: 22px;
-
     height: 22px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     background-color: #5b3d25;
-
     color: #D79A63;
-
     text-decoration: none;
-
     border-radius: 4px;
 }
 
-
-/* =========================================================
-   FOOTER COLUMNS
-========================================================= */
-
 .footer-column {
     min-width: 190px;
-
     display: flex;
-
     flex-direction: column;
 }
 
-
 .footer-column h3 {
     font-family: "Source Sans 3 Black", sans-serif;
-
     font-size: 22px;
-
-    color: #000;
-
+    color: #000000;
     margin-bottom: 8px;
-
     padding-bottom: 6px;
-
     border-bottom: 1px solid #5b3d25;
 }
 
-
 .footer-column a {
     font-family: "Cormorat Garamond", serif;
-
     text-decoration: none;
-
-    color: #000;
-
+    color: #000000;
     font-size: 18px;
-
     margin-bottom: 6px;
 }
-
 
 .footer-column a:hover {
     color: white;
 }
 
-
-/* =========================================================
-   APP IMAGES
-========================================================= */
-
 .app-column img {
     width: 110px;
-
     height: auto;
-
     margin-bottom: 8px;
 }
-
