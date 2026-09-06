@@ -79,7 +79,7 @@
                     Menu
                 </a>
                 //logout button partial placement and design
-                <a href="logout.php">
+                <a href="includes/logout.php">
                 <button type="button">Logout</button>
                 </a>
             </div>

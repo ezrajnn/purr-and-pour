@@ -1,5 +1,5 @@
 <?php 
- 
+
 $host = "localhost"; 
 $db   = "purr-and-pour"; 
 $user = "root"; 
