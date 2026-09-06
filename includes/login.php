@@ -1,6 +1,6 @@
 <?php
-session_start();
 
+session_start();
 require '../database/db.php';
 $message = "";
 
@@ -9,12 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
     $sql = "SELECT * FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
-
-    $stmt->bind_param(
-        "s",
-        $email
-    );
-
+    $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -27,14 +22,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["email"] = $user["email"];
             header("Location: ../index.php");
             exit;
-        }
 
-        else {
+        } else {
             $message = "Incorrect password.";
         }
-    } 
-    
-    else {
+
+    } else {
         $message = "Email not found.";
     }
 
@@ -51,44 +44,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
+
     <title>Login</title>
+    <link rel="stylesheet" href="../style/login.css">
 </head>
 
 <body>
-    <h1>Login</h1>
-    <?php
-    if ($message != "") {
-        echo "<p>$message</p>";
-    }
-    ?>
-
-    <form method="POST">
-        <label>Email</label><br>
-        <input
-            type="email"
-            name="email"
-            required
-        >
-
-        <br><br>
-        <label>Password</label><br>
-        <input
-            type="password"
-            name="password"
-            required
-        >
-        <br><br>
-
-        <button type="submit">
-            Login
-        </button>
-    </form>
-    <br>
-
-    <p>
-        Don't have an account?
-        <a href="register.php">Register</a>
-        
+    <div class="login-container">
+        <h1>Log in</h1>
+        <p class="login-subtitle">
+            Welcome back! Log in to continue to Purr & Pour.
         </p>
-    </body>
+        <?php
+
+        if ($message != "") {
+            echo "<p class='message'>$message</p>";
+        }
+
+        ?>
+
+        <form method="POST">
+            <div class="form-group">
+                <label>Email</label>
+                <input
+                    type="email"
+                    name="email"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    required
+                >
+            </div>
+
+            <button
+                type="submit"
+                class="login-btn"
+            >
+                Log in
+            </button>
+        </form>
+
+        <p class="register-text">
+            Don't have an account yet?
+            <a href="register.php">Register</a>
+            
+        </p>
+    </div>
+</body>
 </html>
