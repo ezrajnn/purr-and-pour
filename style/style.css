@@ -14,91 +14,31 @@
     font-style: normal;
 }
 
+
 /* Reset */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+
 html {
     scroll-behavior: smooth;
 }
 
+
 /* Body */
+
 body {
     font-family: "Source Sans 3 Black", sans-serif;
     background-color: #F4F0E8;
 }
 
-/* Navigation Section */
-header {
-    width: 100%;
-    background-color: #F4F0E8;
-}
-
-.navbar {
-    height: 90px;
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-/* Logo */
-.logo img {
-    width: 72px;
-    height: auto;
-    display: block;
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 34px;
-    list-style: none;
-}
-
-.nav-links a {
-    font-family: "Source Sans 3 Black", sans-serif;
-    font-size: 16px;
-    font-weight: 900;
-    color: #000000;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-.nav-links a:hover {
-    color: #D79A63;
-}
-
-.nav-links .active {
-    color: #D79A63;
-}
-
-.nav-order {
-    min-width: 130px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #5b4530;
-    color: white;
-    text-decoration: none;
-    border-radius: 30px;
-    font-family: "Source Sans 3 Black", sans-serif;
-    font-size: 15px;
-    font-weight: 900;
-    transition: 0.3s;
-}
-
-.nav-order:hover {
-    background-color: #D79A63;
-}
 
 /* Hero Section */
+
 .hero {
     width: 100%;
     height: 570px;
@@ -107,6 +47,7 @@ header {
     background-color: #D79A63;
     overflow: hidden;
 }
+
 
 .hero-content {
     width: 55%;
@@ -127,6 +68,7 @@ header {
     margin: 0;
 }
 
+
 .hero-content h2 {
     font-family: "Source Sans 3 Black", sans-serif;
     font-size: 30px;
@@ -138,6 +80,7 @@ header {
     margin-bottom: 25px;
 }
 
+
 .hero-content p {
     width: 520px;
     font-family: "Cormorat Garamond", serif;
@@ -147,11 +90,13 @@ header {
     margin-bottom: 28px;
 }
 
+
 .hero-buttons {
     display: flex;
     align-items: center;
     gap: 42px;
 }
+
 
 .order-btn,
 .menu-btn {
@@ -168,6 +113,7 @@ header {
     transition: 0.3s;
 }
 
+
 .order-btn {
     background-color: #5b4530;
     color: white;
@@ -175,10 +121,12 @@ header {
     box-shadow: 0 3px 3px rgba(0, 0, 0, 0.20);
 }
 
+
 .order-btn:hover {
     background-color: #c98245;
     border-color: #c98245;
 }
+
 
 .menu-btn {
     background-color: transparent;
@@ -186,6 +134,7 @@ header {
     border: 2px solid #5b4530;
     box-shadow: 0 3px 3px rgba(0, 0, 0, 0.20);
 }
+
 
 .menu-btn:hover {
     background-color: #5b4530;
@@ -201,6 +150,7 @@ header {
     z-index: 2;
 }
 
+
 .frappe {
     width: 850px;
     height: auto;
@@ -209,6 +159,7 @@ header {
     right: -5px;
     z-index: 1;
 }
+
 
 .cats {
     width: 380px;
@@ -219,6 +170,7 @@ header {
     z-index: 4;
 }
 
+
 .iring2 {
     width: 310px;
     height: auto;
@@ -228,12 +180,15 @@ header {
     z-index: 5;
 }
 
+
 /* Bestseller Section */
+
 .bestseller-section {
     width: 100%;
     background-color: #F4F0E8;
     padding: 30px 55px 55px;
 }
+
 
 .bestseller-header {
     width: 100%;
@@ -243,12 +198,14 @@ header {
     margin-bottom: 35px;
 }
 
+
 .bestseller-header h2 {
     font-family: "Cormorat Garamond", serif;
     font-size: 45px;
     font-weight: 900;
     color: #5b4530;
 }
+
 
 .fullmenu-btn {
     min-width: 165px;
@@ -266,9 +223,11 @@ header {
     transition: 0.3s;
 }
 
+
 .fullmenu-btn:hover {
     background-color: #D79A63;
 }
+
 
 .bestseller-cards {
     width: 100%;
@@ -277,6 +236,7 @@ header {
     align-items: center;
     gap: 35px;
 }
+
 
 .drink-card {
     width: 220px;
@@ -287,6 +247,7 @@ header {
     box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.25);
     flex-shrink: 0;
 }
+
 
 .drink-image {
     width: 100%;
@@ -299,12 +260,14 @@ header {
     border-radius: 25px;
 }
 
+
 .drink-image img {
     width: 88%;
     height: 88%;
     object-fit: contain;
     display: block;
 }
+
 
 .drink-info {
     width: 100%;
@@ -318,6 +281,7 @@ header {
     transition: 0.3s;
 }
 
+
 .drink-info h3 {
     font-size: 15px;
     color: white;
@@ -325,18 +289,15 @@ header {
     margin: 0;
 }
 
+
 .drink-info p {
     font-size: 16px;
     color: white;
     margin-top: 5px;
 }
 
-.drink-info:hover {
-    background-color: #5b4530;
-}
-
-
 /* Lounge Section */
+
 .lounge-section {
     width: 100%;
     min-height: 500px;
@@ -800,4 +761,114 @@ header {
     width: 110px;
     height: auto;
     margin-bottom: 8px;
+}
+
+header {
+    width: 100%;
+    background-color: #F4F0E8;
+}
+
+.navbar {
+    width: 100%;
+    max-width: 1260px;
+    height: 60px;
+    margin: 0 auto;
+    padding: 0 18px;
+    display: grid;
+    grid-template-columns: 120px 1fr 100px;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.logo img {
+    width: 55px;
+    height: auto;
+    display: block;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    transform: translateX(-35px);
+}
+
+.nav-links li {
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    font-family: "Source Sans 3 Black", sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: #000000;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.nav-links a.active {
+    color: #D79A63;
+}
+
+.nav-account {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.user-icon {
+    width: 22px;
+    height: 22px;
+    stroke: #000000;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+/* Username */
+.username {
+    font-family: "Source Sans 3 Black", sans-serif;
+    font-size: 16px;
+    font-weight: 900;
+    color: #5b4530;
+    white-space: nowrap;
+}
+
+/* Logout*/
+.logout-btn {
+    width: 100px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #5b4530;
+    color: #ffffff;
+    border-radius: 18px;
+    text-decoration: none;
+    font-family: "Source Sans 3 Black", sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+.logout-btn:hover {
+    background-color: #D79A63;
 }

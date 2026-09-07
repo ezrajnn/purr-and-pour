@@ -1,3 +1,14 @@
+<?php
+
+session_start();
+
+if (!isset($_SESSION["user_id"])) {
+    header("Location: includes/login.php");
+    exit;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,9 +21,11 @@
 </head>
 
 <body>
-    <!-- Navigation -->
+
+    <!-- Homepage Header -->
     <header>
         <nav class="navbar">
+
             <!-- Logo -->
             <div class="logo">
                 <img
@@ -35,7 +48,7 @@
                 </li>
                 <li>
                     <a href="#cats">
-                        Cat Profile
+                        Cat Lounge
                     </a>
                 </li>
                 <li>
@@ -43,12 +56,53 @@
                         Our Story
                     </a>
                 </li>
+
+               
+
             </ul>
 
-            <!-- Order Button -->
-            <a href="#menu" class="nav-order">
-                Order Now
-            </a>
+          <!-- Logged In Account -->
+<div class="nav-account">
+
+    <div class="user-info">
+
+        <svg
+            class="user-icon"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <circle
+                cx="16"
+                cy="16"
+                r="14"
+            />
+
+            <circle
+                cx="16"
+                cy="11"
+                r="5"
+            />
+
+            <path
+                d="M7.5 27C8.5 21.5 11.5 18.5 16 18.5C20.5 18.5 23.5 21.5 24.5 27"
+            />
+        </svg>
+
+        <span class="username">
+            <?php echo htmlspecialchars($_SESSION["name"]); ?>
+        </span>
+
+    </div>
+
+    <a href="includes/logout.php" class="logout-btn">
+        Log out
+    </a>
+
+</div>
+
+            </div>
+
         </nav>
     </header>
 
@@ -78,10 +132,7 @@
                 <a href="#menu" class="menu-btn">
                     Menu
                 </a>
-                //logout button partial placement and design
-                <a href="includes/logout.php">
-                <button type="button">Logout</button>
-                </a>
+               
             </div>
         </div>
 
@@ -611,7 +662,7 @@
                 src="elements/apple_logo.png"
                 alt="App Store"
             >
-              </div>
-         </footer>
-    </body>
+        </div>
+    </footer>
+</body>
 </html>

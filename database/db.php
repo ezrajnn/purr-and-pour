@@ -1,7 +1,7 @@
 <?php 
 
 $host = "localhost"; 
-$db   = "purr-and-pour"; 
+$db   = "purr_and_pour"; 
 $user = "root"; 
 $pass = ""; 
  

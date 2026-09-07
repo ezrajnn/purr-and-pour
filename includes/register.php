@@ -13,14 +13,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $confirmPassword = $_POST["confirm_password"];
 
     if ($password !== $confirmPassword) {
+
         $message = "Passwords do not match.";
 
     } else {
 
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $hashedPassword = password_hash(
+            $password,
+            PASSWORD_DEFAULT
+        );
+
         $sql = "INSERT INTO users (name, email, password)
                 VALUES (?, ?, ?)";
+
         $stmt = $conn->prepare($sql);
+
         $stmt->bind_param(
             "sss",
             $name,
@@ -44,7 +51,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta
@@ -53,79 +59,101 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     >
 
     <title>Register</title>
-    <link rel="stylesheet" href="../style/login.css">
-
+    <link
+        rel="stylesheet"
+        href="../style/register.css"
+    >
 </head>
-
 <body>
 
-    <div class="login-container">
-        <h1>Register</h1>
-        <p class="login-subtitle">
-            Join Purr & Pour! Create your account to get started.
-        </p>
+    <?php
+        include __DIR__ . '/../navigation/loginHeader.php';
+    ?>
 
-        <?php
-
-        if ($message != "") {
-            echo "<p class='message'>$message</p>";
-        }
-
-        ?>
-
-        <form method="POST">
-            <div class="form-group">
-                <label>Name</label>
-                <input
-                    type="text"
-                    name="name"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label>Email</label>
-                <input
-                    type="email"
-                    name="email"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-
-                <label>Confirm Password</label>
-                <input
-                    type="password"
-                    name="confirm_password"
-                    required
-                >
-            </div>
-
-            <button
-                type="submit"
-                class="login-btn"
-            >
+    <main class="register-wrapper">
+        <div class="register-container">
+            <h1>
                 Register
-            </button>
+            </h1>
+            <p class="register-subtitle">
+                Join Purr & Pour! Create your account to get started.
+            </p>
+            <?php
 
-        </form>
+            if ($message != "") {
+                echo "<p class='message'>$message</p>";
+            }
+            ?>
 
-        <p class="register-text">
-            Already have an account?
-            <a href="login.php">
-                Log in
-            </a>
-        </p>
-    </div>
+            <form method="POST">
+
+                <div class="form-group">
+
+                    <label>
+                        Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        name="confirm_password"
+                        required
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    class="register-btn"
+                >
+                    Register
+                </button>
+            </form>
+
+            <p class="login-text">
+                Already have an account?
+                <a href="login.php">
+                    Log in
+                </a>
+            </p>
+        </div>
+    </main>
 </body>
 </html>

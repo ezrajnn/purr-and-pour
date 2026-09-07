@@ -40,61 +40,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="../style/login.css">
 </head>
 
 <body>
-    <div class="login-container">
-        <h1>Log in</h1>
-        <p class="login-subtitle">
-            Welcome back! Log in to continue to Purr & Pour.
-        </p>
-        <?php
 
-        if ($message != "") {
-            echo "<p class='message'>$message</p>";
-        }
+<?php require '../navigation/loginHeader.php'; ?>
 
-        ?>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <h1>Log in</h1>
+            <p class="login-subtitle">
+                Welcome back! Log in to continue to Purr & Pour.
+            </p>
+            <?php
+            if ($message != "") {
+                echo "<p class='message'>$message</p>";
+            }
+            ?>
 
-        <form method="POST">
-            <div class="form-group">
-                <label>Email</label>
-                <input
-                    type="email"
-                    name="email"
-                    required
-                >
-            </div>
+            <form method="POST">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
 
-            <div class="form-group">
-                <label>Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    required
-                >
-            </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
 
-            <button
-                type="submit"
-                class="login-btn"
-            >
-                Log in
-            </button>
-        </form>
+                <button type="submit" class="login-btn">
+                    Log in
+                </button>
+            </form>
 
-        <p class="register-text">
-            Don't have an account yet?
-            <a href="register.php">Register</a>
-            
-        </p>
+            <p class="register-text">
+                Don't have an account yet?
+                <a href="register.php">Register</a>
+            </p>
+        </div>
     </div>
+
 </body>
 </html>
