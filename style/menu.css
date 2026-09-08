@@ -1,186 +1,92 @@
-/* MENU PAGE */
-
 .menu-page {
     width: 100%;
     min-height: 100vh;
-
     background-color: #ffffff;
-
     padding: 55px 20px 90px;
 }
-
-
-/* MAIN MENU CONTAINER */
 
 .menu-container {
     width: 100%;
     max-width: 820px;
-
     margin: 0 auto;
-
     display: grid;
-
     grid-template-columns: repeat(3, 1fr);
-
     column-gap: 55px;
     row-gap: 38px;
 }
-
-
-/* PRODUCT */
 
 .menu-card {
     width: 100%;
 }
 
-
-/* IMAGE */
-
 .menu-card img {
     width: 100%;
     height: 145px;
-
     display: block;
-
     object-fit: cover;
-
     border-radius: 15px;
 }
 
-
-/* TEXT AREA */
-
 .menu-info {
     width: 100%;
-
     margin-top: 8px;
 }
 
-
-/* NAME + PRICE */
-
 .menu-title-row {
     width: 100%;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     gap: 8px;
 }
 
-
 .menu-title-row h3 {
     margin: 0;
-
     font-family: "Source Sans 3 Black", sans-serif;
-
     font-size: 16px;
     font-weight: 900;
-
     line-height: 1.1;
-
     color: #5b4530;
 }
 
 
 .menu-title-row span {
     flex-shrink: 0;
-
     font-family: "Source Sans 3 Black", sans-serif;
-
     font-size: 15px;
     font-weight: 900;
-
     color: #5b4530;
 }
 
-
-/* STOCK */
-
 .menu-info p {
     margin: 2px 0 8px;
-
     font-family: Arial, sans-serif;
-
     font-size: 10px;
     font-weight: 400;
-
     color: #3f342b;
 }
-
-
-/* ADD TO CART */
 
 .add-cart {
     width: 100%;
     height: 40px;
-
     border: none;
-
     border-radius: 5px;
-
     background-color: #634b35;
     color: #ffffff;
-
     font-family: "Source Sans 3 Black", sans-serif;
-
     font-size: 15px;
     font-weight: 900;
-
     cursor: pointer;
-
     transition:
         background-color 0.2s ease,
         transform 0.2s ease;
 }
 
-
 .add-cart:hover {
     background-color: #4c3928;
-
     transform: translateY(-1px);
 }
 
-
 .add-cart:active {
     transform: translateY(0);
-}
-
-
-/* TABLET */
-
-@media (max-width: 850px) {
-
-    .menu-container {
-        max-width: 600px;
-
-        grid-template-columns: repeat(2, 1fr);
-
-        column-gap: 35px;
-    }
-
-}
-
-
-/* PHONE */
-
-@media (max-width: 550px) {
-
-    .menu-page {
-        padding: 35px 25px 60px;
-    }
-
-    .menu-container {
-        max-width: 320px;
-
-        grid-template-columns: 1fr;
-
-        row-gap: 30px;
-    }
-
-    .menu-card img {
-        height: 190px;
-    }
-
 }

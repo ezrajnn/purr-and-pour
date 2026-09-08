@@ -1,0 +1,80 @@
+
+@font-face {
+    font-family: "Source Sans 3 Black";
+    src: url("../fonts/SourceSans3-Black.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+}
+
+.cat-lounge-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
+
+.lounge-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+.lounge-text {
+    flex: 1;
+    font-size: 1rem;
+    max-width: 480px;
+}
+
+
+.lounge-text h2 {
+    font-family: "Source Sans 3 Black", sans-serif;
+    font-weight: 900; 
+    margin-bottom: 20px;
+    color: #5b4530;
+}
+
+.lounge-text p {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #5b4530;
+    margin-bottom: 16px;
+}
+
+.lounge-image-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 450px;
+    display: flex;
+    justify-content: center;
+}
+
+.lounge-image-wrapper img {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.image-bg {
+    position: absolute;
+    z-index: 1;
+    width: 102%;
+    height: 102%;
+    background-color: #e8c3a7; 
+    border-radius: 6px;
+}
+
+.image-right .image-bg {
+    top: -20px;
+    right: -20px;
+}
+
+.image-left .image-bg {
+    top: -20px;
+    left: -20px;
+}

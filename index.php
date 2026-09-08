@@ -16,15 +16,14 @@ session_start();
 <body>
     <div>
         <?php include "navigation/header.php"; ?>
-
         
     </div>
     <!-- Homepage Header -->
 
     <!-- Hero section -->
     <section class="hero" id="home">
-        <!-- HERO TEXT -->
-        <div class="hero-content">
+
+    <div class="hero-content">
             <b>
                 New Brown Cloud<br>
                 Frappuccino<br>
@@ -77,7 +76,7 @@ session_start();
             <h2>
                 Our Bestsellers
             </h2>
-            <a href="includes/menu.php" class="fullmenu-btn">
+            <a href="pages/menu.php" class="fullmenu-btn">
                 View Full Menu ⟶
             </a>
         </div>
@@ -156,9 +155,8 @@ session_start();
     </section>
 
     <!-- Cat Lounge -->
-    <section class="lounge-section" id="lounge">
+    <section class="lounge-section" id="/pages/catlounge.php">
 
-        <!-- CONTENT -->
         <div class="lounge-content">
             <h2>
                 Our Cat Lounge
@@ -531,12 +529,12 @@ session_start();
             <a href="#cats">
                 Cat Profile
             </a>
-            <a href="#lounge">
+            <a href="pages/catLounge.php">
                 Cat Lounge
             </a>
         </div>
 
-        <!-- APP -->
+        <!-- App -->
         <div class="footer-column app-column">
             <h3>
                 Get the App
