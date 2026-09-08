@@ -2,38 +2,50 @@
 
 session_start();
 require '../database/db.php';
+
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
     $email = $_POST["email"];
     $password = $_POST["password"];
+
     $sql = "SELECT * FROM users WHERE email = ?";
+
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
+
     $stmt->execute();
+
     $result = $stmt->get_result();
 
     if ($result->num_rows === 1) {
+
         $user = $result->fetch_assoc();
 
         if (password_verify($password, $user["password"])) {
+
             $_SESSION["user_id"] = $user["id"];
             $_SESSION["name"] = $user["name"];
             $_SESSION["email"] = $user["email"];
+
             header("Location: ../index.php");
             exit;
 
         } else {
+
             $message = "Incorrect password.";
+
         }
 
     } else {
+
         $message = "Email not found.";
+
     }
 
     $stmt->close();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -43,11 +55,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="../style/login.css">
+    <link rel="stylesheet" href="../style/loginHeader.css">
+
 </head>
 
 <body>
 
-<?php require '../navigation/loginHeader.php'; ?>
+<?php require '../navigation/header.php'; ?>
 
     <div class="login-wrapper">
         <div class="login-container">

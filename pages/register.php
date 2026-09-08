@@ -59,15 +59,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     >
 
     <title>Register</title>
-    <link
-        rel="stylesheet"
-        href="../style/register.css"
-    >
+    <link rel="stylesheet" href="../style/register.css">
+        <link rel="stylesheet" href="../style/loginHeader.css">
+
+
 </head>
 <body>
 
     <?php
-        include __DIR__ . '/../navigation/loginHeader.php';
+        include __DIR__ . '/../navigation/header.php';
     ?>
 
     <main class="register-wrapper">

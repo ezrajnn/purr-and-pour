@@ -5,11 +5,11 @@ $db   = "purr_and_pour";
 $user = "root"; 
 $pass = ""; 
  
-$conn = new mysqli($host, $user, $pass, $db, 3306); 
-if ($conn->connect_error) { 
-    die("Connection failed: " . $conn->connect_error); 
+//db url, db_username, db_pass, database name
+$conn=mysqli_connect("localhost", "root", "", "purr_and_pour");
+if (!$conn){
+    echo "No connection to the database";
+    die;
 }
- 
-$conn->set_charset("utf8mb4");     
 
 ?>  

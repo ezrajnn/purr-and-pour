@@ -76,6 +76,8 @@
     font-weight: 900;
     color: #ffffff;
     text-decoration: none;
+    text-align: center;
+    justify-content: center;
     white-space: nowrap;
     transition: color 0.2s ease;
 }
@@ -89,7 +91,7 @@
     font-family: "Source Sans 3 Black", sans-serif;
     font-size: 12px;
     font-weight: 900;
-    color: #5b4530;
+    color: #fffff1;
     background-color: #D79A63;
     text-decoration: none;
     white-space: nowrap;

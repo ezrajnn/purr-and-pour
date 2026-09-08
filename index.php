@@ -1,12 +1,5 @@
 <?php
-
 session_start();
-
-if (!isset($_SESSION["user_id"])) {
-    header("Location: includes/login.php");
-    exit;
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -17,94 +10,16 @@ if (!isset($_SESSION["user_id"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purr & Pour Café</title>
     <link rel="stylesheet" href="style/style.css">
-
+    <link rel="stylesheet" href="style/loginHeader.css">
 </head>
 
 <body>
+    <div>
+        <?php include "navigation/header.php"; ?>
 
-    <!-- Homepage Header -->
-    <header>
-        <nav class="navbar">
-
-            <!-- Logo -->
-            <div class="logo">
-                <img
-                    src="elements/logo.png"
-                    alt="Purr & Pour Logo"
-                >
-            </div>
-
-            <!-- Navigation Links -->
-            <ul class="nav-links">
-                <li>
-                    <a href="#home" class="active">
-                        Home
-                    </a>
-                </li>
-                <li>
-                    <a href="#menu">
-                        Menu
-                    </a>
-                </li>
-                <li>
-                    <a href="#cats">
-                        Cat Lounge
-                    </a>
-                </li>
-                <li>
-                    <a href="#story">
-                        Our Story
-                    </a>
-                </li>
-
-               
-
-            </ul>
-
-          <!-- Logged In Account -->
-<div class="nav-account">
-
-    <div class="user-info">
-
-        <svg
-            class="user-icon"
-            viewBox="0 0 32 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <circle
-                cx="16"
-                cy="16"
-                r="14"
-            />
-
-            <circle
-                cx="16"
-                cy="11"
-                r="5"
-            />
-
-            <path
-                d="M7.5 27C8.5 21.5 11.5 18.5 16 18.5C20.5 18.5 23.5 21.5 24.5 27"
-            />
-        </svg>
-
-        <span class="username">
-            <?php echo htmlspecialchars($_SESSION["name"]); ?>
-        </span>
-
+        
     </div>
-
-    <a href="includes/logout.php" class="logout-btn">
-        Log out
-    </a>
-
-</div>
-
-            </div>
-
-        </nav>
-    </header>
+    <!-- Homepage Header -->
 
     <!-- Hero section -->
     <section class="hero" id="home">
@@ -129,10 +44,11 @@ if (!isset($_SESSION["user_id"])) {
                 <a href="#menu" class="order-btn">
                     Order Now ⟶
                 </a>
-                <a href="#menu" class="menu-btn">
+                <a href="includes/menu.php" class="menu-btn">
+
                     Menu
                 </a>
-               
+
             </div>
         </div>
 
@@ -141,30 +57,27 @@ if (!isset($_SESSION["user_id"])) {
             <img
                 src="elements/coffee.png"
                 alt="Brown Cloud Frappuccino"
-                class="frappe"
-            >
+                class="frappe">
             <img
                 src="elements/iring.png"
                 alt="Cats"
-                class="cats"
-            >
+                class="cats">
             <img
                 src="elements/iring2.png"
                 alt="Cats"
-                class="iring2"
-            >
+                class="iring2">
         </div>
     </section>
 
     <!-- Bestseller Section -->
-    <section class="bestseller-section" id="menu">
+    <section class="bestseller-section">
 
         <!-- Header -->
         <div class="bestseller-header">
             <h2>
                 Our Bestsellers
             </h2>
-            <a href="#menu" class="fullmenu-btn">
+            <a href="includes/menu.php" class="fullmenu-btn">
                 View Full Menu ⟶
             </a>
         </div>
@@ -177,8 +90,7 @@ if (!isset($_SESSION["user_id"])) {
                 <div class="drink-image">
                     <img
                         src="elements/drink1.png"
-                        alt="Chocolate Frappe"
-                    >
+                        alt="Chocolate Frappe">
                 </div>
                 <a href="#menu" class="drink-info">
                     <h3>
@@ -195,8 +107,7 @@ if (!isset($_SESSION["user_id"])) {
                 <div class="drink-image">
                     <img
                         src="elements/drink2.png"
-                        alt="Milk Tea"
-                    >
+                        alt="Milk Tea">
                 </div>
                 <a href="#menu" class="drink-info">
                     <h3>
@@ -213,8 +124,7 @@ if (!isset($_SESSION["user_id"])) {
                 <div class="drink-image">
                     <img
                         src="elements/caramel.png"
-                        alt="Caramel Macchiato"
-                    >
+                        alt="Caramel Macchiato">
                 </div>
                 <a href="#menu" class="drink-info">
                     <h3>
@@ -231,8 +141,7 @@ if (!isset($_SESSION["user_id"])) {
                 <div class="drink-image">
                     <img
                         src="elements/strawberry.png"
-                        alt="Strawberry Shake"
-                    >
+                        alt="Strawberry Shake">
                 </div>
                 <a href="#menu" class="drink-info">
                     <h3>
@@ -262,7 +171,7 @@ if (!isset($_SESSION["user_id"])) {
                 of our playful companions.
             </p>
             <a href="#reservation" class="lounge-btn">
-                Reserve a Table ⟶
+                View M ⟶
             </a>
         </div>
 
@@ -270,8 +179,7 @@ if (!isset($_SESSION["user_id"])) {
         <div class="lounge-image">
             <img
                 src="elements/cat_lounge.png"
-                alt="Our Cat Lounge"
-            >
+                alt="Our Cat Lounge">
         </div>
     </section>
 
@@ -298,15 +206,13 @@ if (!isset($_SESSION["user_id"])) {
                 <div class="cat-photo">
                     <img
                         src="elements/oliver.png"
-                        alt="Oliver"
-                    >
+                        alt="Oliver">
                 </div>
                 <div class="cat-name">
                     <img
                         src="elements/paw.png"
                         alt="Paw"
-                        class="paw-image"
-                    >
+                        class="paw-image">
                     <h3>
                         Oliver
                     </h3>
@@ -318,15 +224,13 @@ if (!isset($_SESSION["user_id"])) {
                 <div class="cat-photo">
                     <img
                         src="elements/becka.png"
-                        alt="Becka"
-                    >
+                        alt="Becka">
                 </div>
                 <div class="cat-name">
                     <img
                         src="elements/paw.png"
                         alt="Paw"
-                        class="paw-image"
-                    >
+                        class="paw-image">
                     <h3>
                         Becka
                     </h3>
@@ -338,15 +242,13 @@ if (!isset($_SESSION["user_id"])) {
                 <div class="cat-photo">
                     <img
                         src="elements/billy.png"
-                        alt="Billy"
-                    >
+                        alt="Billy">
                 </div>
                 <div class="cat-name">
                     <img
                         src="elements/paw.png"
                         alt="Paw"
-                        class="paw-image"
-                    >
+                        class="paw-image">
                     <h3>
                         Billy
                     </h3>
@@ -358,15 +260,13 @@ if (!isset($_SESSION["user_id"])) {
                 <div class="cat-photo">
                     <img
                         src="elements/percy.png"
-                        alt="Percy"
-                    >
+                        alt="Percy">
                 </div>
                 <div class="cat-name">
                     <img
                         src="elements/paw.png"
                         alt="Paw"
-                        class="paw-image"
-                    >
+                        class="paw-image">
                     <h3>
                         Percy
                     </h3>
@@ -378,15 +278,13 @@ if (!isset($_SESSION["user_id"])) {
                 <div class="cat-photo">
                     <img
                         src="elements/cassy.png"
-                        alt="Cassy"
-                    >
+                        alt="Cassy">
                 </div>
                 <div class="cat-name">
                     <img
                         src="elements/paw.png"
                         alt="Paw"
-                        class="paw-image"
-                    >
+                        class="paw-image">
                     <h3>
                         Cassy
                     </h3>
@@ -398,15 +296,13 @@ if (!isset($_SESSION["user_id"])) {
                 <div class="cat-photo">
                     <img
                         src="elements/kimmy.png"
-                        alt="Kimmy"
-                    >
+                        alt="Kimmy">
                 </div>
                 <div class="cat-name">
                     <img
                         src="elements/paw.png"
                         alt="Paw"
-                        class="paw-image"
-                    >
+                        class="paw-image">
                     <h3>
                         Kimmy
                     </h3>
@@ -418,15 +314,13 @@ if (!isset($_SESSION["user_id"])) {
                 <div class="cat-photo">
                     <img
                         src="elements/tom.png"
-                        alt="Tom"
-                    >
+                        alt="Tom">
                 </div>
                 <div class="cat-name">
                     <img
                         src="elements/paw.png"
                         alt="Paw"
-                        class="paw-image"
-                    >
+                        class="paw-image">
                     <h3>
                         Tom
                     </h3>
@@ -438,15 +332,13 @@ if (!isset($_SESSION["user_id"])) {
                 <div class="cat-photo">
                     <img
                         src="elements/weasley.png"
-                        alt="Weasley"
-                    >
+                        alt="Weasley">
                 </div>
                 <div class="cat-name">
                     <img
                         src="elements/paw.png"
                         alt="Paw"
-                        class="paw-image"
-                    >
+                        class="paw-image">
                     <h3>
                         Weasley
                     </h3>
@@ -483,8 +375,7 @@ if (!isset($_SESSION["user_id"])) {
         <div class="about-image">
             <img
                 src="elements/cafe.png"
-                alt="About Us"
-            >
+                alt="About Us">
         </div>
     </section>
 
@@ -520,8 +411,7 @@ if (!isset($_SESSION["user_id"])) {
                         <img
                             src="elements/gordon.png"
                             alt="Gordon"
-                            class="reviewer-avatar"
-                        >
+                            class="reviewer-avatar">
                         <span class="reviewer-name">
                             Gordon
                         </span>
@@ -546,8 +436,7 @@ if (!isset($_SESSION["user_id"])) {
                         <img
                             src="elements/michael.png"
                             alt="Michael"
-                            class="reviewer-avatar"
-                        >
+                            class="reviewer-avatar">
                         <span class="reviewer-name">
                             Michael
                         </span>
@@ -572,8 +461,7 @@ if (!isset($_SESSION["user_id"])) {
                         <img
                             src="elements/joseph.png"
                             alt="Joseph"
-                            class="reviewer-avatar"
-                        >
+                            class="reviewer-avatar">
                         <span class="reviewer-name">
                             Joseph
                         </span>
@@ -590,8 +478,7 @@ if (!isset($_SESSION["user_id"])) {
         <div class="footer-brand">
             <img
                 src="elements/footer_logo.png"
-                alt="Purr & Pour Cafe"
-            >
+                alt="Purr & Pour Cafe">
             <p>
                 0967 6767 6767
             </p>
@@ -656,13 +543,12 @@ if (!isset($_SESSION["user_id"])) {
             </h3>
             <img
                 src="elements/google_logo.png"
-                alt="Google Play"
-            >
+                alt="Google Play">
             <img
                 src="elements/apple_logo.png"
-                alt="App Store"
-            >
+                alt="App Store">
         </div>
     </footer>
 </body>
+
 </html>
