@@ -1,6 +1,15 @@
 <?php
-// session_start();
+session_start();
+require_once __DIR__ . '/../functions/products.php';
+$menu_products = get_menu_products();
+
+$categories = [];
+foreach ($menu_products as $prod) {
+    $cat = !empty($prod['category']) ? $prod['category'] : 'Specialties';
+    $categories[$cat][] = $prod;
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,316 +21,64 @@
 
     <link rel="stylesheet" href="../style/menu.css">
     <link rel="stylesheet" href="../style/loginHeader.css">
-
 </head>
 
 <body>
 
 <?php include '../navigation/header.php'; ?>
-    <!-- MENU PAGE -->
-    <main class="menu-page">
 
-        <div class="menu-container">
+<main class="menu-page">
 
-            <!-- HOT COFFEE -->
-
-            <div class="menu-card">
-                <img src="../elements/drink_1.png" alt="Latte Coffee">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Latte Coffee</h3>
-                        <span>$5.00</span>
-                    </div>
-                    <p>Available Stock: 19</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/drink_2.png" alt="Hot Americano">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Hot Americano</h3>
-                        <span>$4.50</span>
-                    </div>
-                    <p>Available Stock: 25</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/drink_3.png" alt="Espresso Coffee">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Espresso Coffee</h3>
-                        <span>$4.00</span>
-                    </div>
-                    <p>Available Stock: 22</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/drink_4.png" alt="Hot Mocha">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Hot Mocha</h3>
-                        <span>$5.50</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/drink_5.png" alt="Vanilla Latte">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Vanilla Latte</h3>
-                        <span>$6.00</span>
-                    </div>
-                    <p>Available Stock: 20</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/drink_6.png" alt="Macchiato Latte">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Macchiato Latte</h3>
-                        <span>$10.00</span>
-                    </div>
-                    <p>Available Stock: 18</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <!-- COLD DRINKS -->
-
-            <div class="menu-card">
-                <img src="../elements/drink_7.png" alt="Ube Shake">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Ube Shake</h3>
-                        <span>$6.50</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/drink_8.png" alt="Caramel Latte">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Caramel Latte</h3>
-                        <span>$6.00</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/drink_9.png" alt="Iced Matcha">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Iced Matcha</h3>
-                        <span>$6.00</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/drink_10.png" alt="Strawberry Latte">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Strawberry Latte</h3>
-                        <span>$6.50</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/drink_11.png" alt="Iced Mocha">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Iced Mocha</h3>
-                        <span>$5.50</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/drink_12.png" alt="Milktea">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Milktea</h3>
-                        <span>$5.00</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <!-- DESSERTS -->
-
-            <div class="menu-card">
-                <img src="../elements/pastry_1.png" alt="Croissant">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Croissant</h3>
-                        <span>$3.50</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/pastry_2.png" alt="Chocolate Cake">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Chocolate Cake</h3>
-                        <span>$5.00</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/pastry_3.png" alt="Chocolate Brownie">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Chocolate Brownie</h3>
-                        <span>$4.00</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/pastry_4.png" alt="Chocolate Cookie">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Chocolate Cookie</h3>
-                        <span>$3.00</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/pastry_5.png" alt="Choco Pie">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Choco Pie</h3>
-                        <span>$4.50</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/pastry_6.png" alt="Tiramisu">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Tiramisu</h3>
-                        <span>$5.50</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <!-- MEALS -->
-
-            <div class="menu-card">
-                <img src="../elements/meal_1.png" alt="Spamsilog">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Spamsilog</h3>
-                        <span>$8.50</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/meal_2.png" alt="Tocilog">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Tocilog</h3>
-                        <span>$7.50</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/meal_2.png" alt="CornSilog">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>CornSilog</h3>
-                        <span>$7.00</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/meal_4.png" alt="Carbonara">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Carbonara</h3>
-                        <span>$8.00</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/meal_5.png" alt="Spaghetti">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Spaghetti</h3>
-                        <span>$8.00</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
-            <div class="menu-card">
-                <img src="../elements/meal_6.png" alt="Teriyaki Bowl">
-                <div class="menu-info">
-                    <div class="menu-title-row">
-                        <h3>Teriyaki Bowl</h3>
-                        <span>$8.50</span>
-                    </div>
-                    <p>Available Stock: 15</p>
-                </div>
-                <button class="add-cart">Add to Cart</button>
-            </div>
-
+    <?php if (isset($_GET['added'])): ?>
+        <div class="cart-notification">
+            <span>✓ Item successfully added to your cart!</span>
+            <a href="cart.php" class="view-cart-link">View Cart</a>
         </div>
+    <?php endif; ?>
 
-    </main>
+    <?php foreach ($categories as $category_name => $items): ?>
+        <div class="menu-category-section">
+            <h2 class="category-heading">
+                <?php echo htmlspecialchars($category_name); ?>
+            </h2>
+
+            <div class="menu-container">
+                <?php foreach ($items as $product): ?>
+                    <div class="menu-card">
+                        <img src="../elements/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+
+                        <div class="menu-info">
+                            <div class="menu-title-row">
+                                <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                                <span>$<?php echo number_format($product['price'], 2); ?></span>
+                            </div>
+
+                            <p class="<?php echo $product['stock'] > 0 ? 'menu-stock-available' : 'menu-stock-out'; ?>">
+                                <?php if ($product['stock'] > 0): ?>
+                                    Available Stock: <?php echo $product['stock']; ?>
+                                <?php else: ?>
+                                    Out of Stock
+                                <?php endif; ?>
+                            </p>
+                        </div>
+
+                        <?php if (isset($_SESSION["role"]) && $_SESSION["role"] === "admin"): ?>
+                            <a href="admin.php?edit=<?php echo $product['id']; ?>" class="add-cart admin-edit-btn">⚙ Edit in Admin</a>
+                        <?php elseif ($product['stock'] > 0): ?>
+                            <form action="../database/addCart.php" method="POST">
+                                <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                                <button type="submit" class="add-cart">Add to Cart</button>
+                            </form>
+                        <?php else: ?>
+                            <button type="button" class="add-cart sold-out-btn" disabled>Sold Out</button>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endforeach; ?>
+
+</main>
 
 </body>
 

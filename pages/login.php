@@ -1,53 +1,54 @@
 <?php
-
-session_start();
-require '../database/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . '/../database/db.php';
 
 $message = "";
+if (isset($_GET["error"]) && $_GET["error"] === "login_required") {
+    $message = "Please log in to add items to your cart.";
+}
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = isset($_POST["email"]) ? trim($_POST["email"]) : "";
+    $password = isset($_POST["password"]) ? $_POST["password"] : "";
 
-    $email = $_POST["email"];
-    $password = $_POST["password"];
-
-    $sql = "SELECT * FROM users WHERE email = ?";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $email);
-
-    $stmt->execute();
-
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 1) {
-
-        $user = $result->fetch_assoc();
-
-        if (password_verify($password, $user["password"])) {
-
-            $_SESSION["user_id"] = $user["id"];
-            $_SESSION["name"] = $user["name"];
-            $_SESSION["email"] = $user["email"];
-
-            header("Location: ../index.php");
-            exit;
-
-        } else {
-
-            $message = "Incorrect password.";
-
-        }
-
+    if (empty($email) || empty($password)) {
+        $message = "Please fill in all fields.";
     } else {
+        $sql = "SELECT * FROM users WHERE email = ?";
+        $stmt = $conn->prepare($sql);
 
-        $message = "Email not found.";
+        if ($stmt) {
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
+            if ($result->num_rows === 1) {
+                $user = $result->fetch_assoc();
+
+                if (password_verify($password, $user["password"])) {
+                    $_SESSION["user_id"] = $user["id"];
+                    $_SESSION["name"] = $user["name"];
+                    $_SESSION["email"] = $user["email"];
+                    $_SESSION["role"] = $user["role"];
+
+                    header("Location: ../index.php");
+                    exit();
+                } else {
+                    $message = "Incorrect password.";
+                }
+            } else {
+                $message = "Email not found.";
+            }
+
+            $stmt->close();
+        } else {
+            $message = "Database error. Please try again later.";
+        }
     }
-
-    $stmt->close();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,12 +57,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Login</title>
     <link rel="stylesheet" href="../style/login.css">
     <link rel="stylesheet" href="../style/loginHeader.css">
-
 </head>
-
 <body>
 
-<?php require '../navigation/header.php'; ?>
+<?php require_once __DIR__ . '/../navigation/header.php'; ?>
 
     <div class="login-wrapper">
         <div class="login-container">
@@ -70,15 +69,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 Welcome back! Log in to continue to Purr & Pour.
             </p>
             <?php
-            if ($message != "") {
-                echo "<p class='message'>$message</p>";
+            if (!empty($message)) {
+                echo "<p class='message'>" . htmlspecialchars($message) . "</p>";
             }
             ?>
 
             <form method="POST">
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="email" required>
+                    <input type="email" name="email" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">

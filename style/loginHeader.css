@@ -13,7 +13,7 @@
     margin: 0 auto;
     padding: 0 18px;
     display: grid;
-    grid-template-columns: 120px 1fr 190px;
+    grid-template-columns: 120px 1fr auto;
     align-items: center;
     box-sizing: border-box;
 }
@@ -112,4 +112,26 @@
 .header-register:hover {
     background-color: #ffffff;
     color: #5b4530;
+}
+
+.header-cart-badge {
+    display: inline-block;
+    background-color: #D79A63;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 1px 7px;
+    border-radius: 12px;
+    vertical-align: middle;
+    margin-left: 2px;
+}
+
+.header-admin {
+    background-color: #8c6d48;
+    margin-right: 6px;
+}
+
+.header-admin:hover {
+    background-color: #725637;
+    color: #ffffff;
 }

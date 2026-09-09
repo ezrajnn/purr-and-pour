@@ -1,7 +1,17 @@
-<link rel="stylesheet" href="../style/loginHeader.css">
-<link rel="stylesheet" href="../style/catLounge.css">
-
-
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Lounge | Purr & Pour Café</title>
+    <link rel="stylesheet" href="../style/loginHeader.css">
+    <link rel="stylesheet" href="../style/catLounge.css">
+</head>
 <body>
     <?php include '../navigation/header.php'; ?>
 <section class="cat-lounge-page">
@@ -85,3 +95,4 @@
 
 </section>
 </body>
+</html>

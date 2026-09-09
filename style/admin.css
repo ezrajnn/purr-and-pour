@@ -1,0 +1,333 @@
+﻿/* =========================================================
+   Admin Dashboard & Inventory Page Styles
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #F4F0E8;
+    font-family: system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+}
+
+.admin-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 30px auto 80px;
+    padding: 0 20px;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.admin-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #5b4530;
+}
+
+.admin-subtitle {
+    color: #8c7b6d;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.admin-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.admin-link-live {
+    color: #634b35;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.admin-link-live:hover {
+    text-decoration: underline;
+}
+
+.admin-link-db {
+    background: #e4d7c7;
+    color: #5b4530;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+    transition: background-color 0.2s ease;
+}
+
+.admin-link-db:hover {
+    background: #d8c7b4;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    border: 1px solid #efe7dc;
+}
+
+.stat-card span {
+    font-size: 13px;
+    color: #8c7b6d;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.stat-card h3 {
+    font-size: 24px;
+    color: #5b4530;
+    font-weight: 800;
+}
+
+.alert-box {
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.alert-success {
+    background-color: #def7ec;
+    color: #03543f;
+    border-left: 4px solid #31c48d;
+}
+
+.alert-error {
+    background-color: #fde8e8;
+    color: #9b1c1c;
+    border-left: 4px solid #f98080;
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+@media(max-width: 900px) {
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    border: 1px solid #efe7dc;
+}
+
+.card h2 {
+    font-size: 18px;
+    color: #5b4530;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0eae1;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #5b4530;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #dcd4cb;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+    background-color: #ffffff;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #634b35;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #634b35;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-submit:hover {
+    background: #4c3928;
+}
+
+.btn-cancel {
+    display: block;
+    text-align: center;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #8c7b6d;
+    text-decoration: none;
+}
+
+.btn-cancel:hover {
+    text-decoration: underline;
+}
+
+/* Inventory Table */
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.inventory-table th {
+    background-color: #faf7f2;
+    text-align: left;
+    padding: 12px 10px;
+    color: #634b35;
+    font-weight: 700;
+    border-bottom: 2px solid #ecd8c6;
+}
+
+.inventory-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #f4ede5;
+    vertical-align: middle;
+    color: #3f342b;
+}
+
+.inventory-table tr:hover td {
+    background-color: #fdfbf7;
+}
+
+.prod-thumb {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+}
+
+.stock-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.stock-good {
+    background: #def7ec;
+    color: #03543f;
+}
+
+.stock-low {
+    background: #fef08a;
+    color: #854d0e;
+}
+
+.stock-out {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.quick-stock-form {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.quick-stock-form input {
+    width: 50px;
+    padding: 5px;
+    font-size: 12px;
+    border: 1px solid #dcd4cb;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.btn-stock-add {
+    background: #634b35;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.btn-stock-add:hover {
+    background: #4c3928;
+}
+
+.action-links a {
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+.action-edit {
+    color: #2563eb;
+}
+
+.action-edit:hover {
+    text-decoration: underline;
+}
+
+.action-delete {
+    color: #dc2626;
+}
+
+.action-delete:hover {
+    text-decoration: underline;
+}

@@ -40,14 +40,12 @@ session_start();
 
             <!-- Hero Buttons -->
             <div class="hero-buttons">
-                <a href="#menu" class="order-btn">
+                <a href="pages/menu.php" class="order-btn">
                     Order Now ⟶
                 </a>
-                <a href="includes/menu.php" class="menu-btn">
-
+                <a href="pages/menu.php" class="menu-btn">
                     Menu
                 </a>
-
             </div>
         </div>
 
@@ -91,7 +89,7 @@ session_start();
                         src="elements/drink1.png"
                         alt="Chocolate Frappe">
                 </div>
-                <a href="#menu" class="drink-info">
+                <a href="pages/menu.php" class="drink-info">
                     <h3>
                         Chocolate Frappe
                     </h3>
@@ -108,7 +106,7 @@ session_start();
                         src="elements/drink2.png"
                         alt="Milk Tea">
                 </div>
-                <a href="#menu" class="drink-info">
+                <a href="pages/menu.php" class="drink-info">
                     <h3>
                         Milktea
                     </h3>
@@ -125,7 +123,7 @@ session_start();
                         src="elements/caramel.png"
                         alt="Caramel Macchiato">
                 </div>
-                <a href="#menu" class="drink-info">
+                <a href="pages/menu.php" class="drink-info">
                     <h3>
                         Caramel Macchiato
                     </h3>
@@ -142,7 +140,7 @@ session_start();
                         src="elements/strawberry.png"
                         alt="Strawberry Shake">
                 </div>
-                <a href="#menu" class="drink-info">
+                <a href="pages/menu.php" class="drink-info">
                     <h3>
                         Strawberry Shake
                     </h3>
@@ -168,8 +166,8 @@ session_start();
                 make new furry friends, and enjoy the comforting company
                 of our playful companions.
             </p>
-            <a href="#reservation" class="lounge-btn">
-                View M ⟶
+            <a href="pages/catLounge.php" class="lounge-btn">
+                View More ⟶
             </a>
         </div>
 
@@ -364,7 +362,7 @@ session_start();
                 and create meaningful memories with cats
                 in a warm and welcoming atmosphere.
             </p>
-            <a href="#story" class="about-btn">
+            <a href="pages/ourStory.php" class="about-btn">
                 More About us ⟶
             </a>
         </div>
@@ -498,16 +496,16 @@ session_start();
             <h3>
                 Menu
             </h3>
-            <a href="#menu">
+            <a href="pages/menu.php">
                 Drinks
             </a>
-            <a href="#menu">
+            <a href="pages/menu.php">
                 Meals
             </a>
-            <a href="#menu">
+            <a href="pages/menu.php">
                 Pastries
             </a>
-            <a href="#menu">
+            <a href="pages/menu.php">
                 Bestsellers
             </a>
         </div>
@@ -517,13 +515,13 @@ session_start();
             <h3>
                 Quicklinks
             </h3>
-            <a href="#story">
+            <a href="pages/ourStory.php">
                 About Us
             </a>
-            <a href="#home">
+            <a href="index.php">
                 Home
             </a>
-            <a href="#menu">
+            <a href="pages/menu.php">
                 Menu
             </a>
             <a href="#cats">
