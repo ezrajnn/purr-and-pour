@@ -86,10 +86,10 @@ $stmt->close();
             </div>
             <div class="profile-info">
                 <h1><?php echo htmlspecialchars($user_data['name']); ?></h1>
-                <p>📧 <?php echo htmlspecialchars($user_data['email']); ?></p>
+                <p><?php echo htmlspecialchars($user_data['email']); ?></p>
                 <div>
                     <span class="role-badge">
-                        <?php echo ($user_data['role'] === 'admin') ? '⚙ Administrator' : '🐾 Café Member'; ?>
+                        <?php echo ($user_data['role'] === 'admin') ? 'Administrator' : 'Café Member'; ?>
                     </span>
                     <span style="font-size: 12px; color: #8c7b6d; margin-left: 8px;">User ID #<?php echo $user_data['id']; ?></span>
                 </div>
@@ -129,7 +129,7 @@ $stmt->close();
     <div class="orders-section">
         <div class="orders-header">
             <div>
-                <h2>📜 Transaction History & Order Status</h2>
+                <h2>Transaction History & Order Status</h2>
                 <p style="color: #8c7b6d; font-size: 13px; margin-top: 3px;">
                     Track every order and check real-time approval status from our café admin
                 </p>
@@ -146,7 +146,7 @@ $stmt->close();
 
         <?php if (empty($orders)): ?>
             <div class="empty-history">
-                <span class="empty-history-icon">☕</span>
+                <span class="empty-history-icon"></span>
                 <h3>No Transactions Found</h3>
                 <p>You haven't placed any orders yet. Visit our café menu to order fresh drinks and treats!</p>
                 <a href="menu.php" class="btn-order-now">Explore Our Menu →</a>
@@ -171,7 +171,7 @@ $stmt->close();
                             $st = $ord['status'];
                             $filter_category = 'pending';
                             $pill_class = 'status-pending';
-                            $status_text = '⏳ Pending Admin Approval';
+                            $status_text = 'Pending Admin Approval';
                             $status_help = 'Your order is waiting for admin confirmation.';
 
                             if ($st === 'Approved' || $st === 'Confirmed') {

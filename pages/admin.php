@@ -149,21 +149,21 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard & Inventory | Purr & Pour</title>
+    <link rel="stylesheet" href="../style/loginHeader.css">
     <link rel="stylesheet" href="../style/admin.css">
 </head>
 <body>
 
-<?php require '../navigation/header.php'; ?>
+<?php require_once __DIR__ . '/../navigation/header.php'; ?>
 
 <main class="admin-page">
     <div class="admin-header">
         <div>
-            <h1>⚙ Café Administrator Dashboard</h1>
+            <h1>Café Administrator Dashboard</h1>
             <p class="admin-subtitle">Manage stock levels, add products, and update café menu items</p>
         </div>
         <div class="admin-nav-links">
-            <a href="menu.php" class="admin-link-live">← View Live Menu</a>
-            <a href="http://localhost/phpmyadmin/index.php?route=/database/designer&db=purr_and_pour" target="_blank" class="admin-link-db">🔗 phpMyAdmin Designer</a>
+            <a href="menu.php" class="admin-link-live">← View Menu</a>
         </div>
     </div>
 
@@ -198,7 +198,7 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
     <div class="admin-grid">
         <!-- Product Create / Edit Form (C & U in CRUD) -->
         <div class="card">
-            <h2><?php echo $edit_product ? "✏ Edit Product #{$edit_product['id']}" : "➕ Add New Product"; ?></h2>
+            <h2><?php echo $edit_product ? "✏ Edit Product #{$edit_product['id']}" : "Add New Product"; ?></h2>
             
             <form action="admin.php" method="POST">
                 <input type="hidden" name="action" value="<?php echo $edit_product ? 'update_product' : 'create_product'; ?>">
@@ -266,9 +266,9 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
             </form>
         </div>
 
-        <!-- Inventory Table (R & D in CRUD + Stock Increase) -->
+        <!-- Inventory Table !-->
         <div class="card">
-            <h2>📦 Live Inventory & Stock Controller</h2>
+            <h2>Live Inventory & Stock Controller</h2>
             <div style="overflow-x: auto;">
                 <table class="inventory-table">
                     <thead>
@@ -306,7 +306,7 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
                                         <input type="hidden" name="product_id" value="<?php echo $prod['id']; ?>">
                                         <input type="number" name="qty" value="5" min="1" step="1" style="width: 42px; padding: 4px; font-size: 12px; border: 1px solid #dcd4cb; border-radius: 4px; text-align: center;">
                                         <button type="submit" name="adjust_type" value="add" class="btn-stock-add" style="background:#48bb78;" title="Add to stock">+Add</button>
-                                        <button type="submit" name="adjust_type" value="deduct" class="btn-stock-add" style="background:#e53e3e;" title="Deduct from stock">-Deduct</button>
+                                        <button type="submit" name="adjust_type" value="deduct" class="btn-stock-add" style="background:#e53e3e;" title="Deduct from stock">Deduct</button>
                                     </form>
                                 </td>
                                 <td class="action-links">
@@ -323,7 +323,7 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
 
     <!-- Customer Orders Approval Section -->
     <div class="card" id="orders-section" style="margin-top: 30px;">
-        <h2>📋 Customer Orders & Approval Management</h2>
+        <h2>Customer Orders & Approval Management</h2>
         <?php
         $orders_query = mysqli_query($conn, "SELECT o.*, GROUP_CONCAT(CONCAT(oi.product_name, ' (x', oi.quantity, ')') SEPARATOR ', ') as items_summary FROM orders o LEFT JOIN order_items oi ON o.id = oi.order_id GROUP BY o.id ORDER BY o.id DESC");
         $all_orders = [];
@@ -356,16 +356,16 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
                             <?php
                             $st = $ord['status'];
                             $badge_color = 'background:#fef08a; color:#854d0e; border: 1px solid #fde047;';
-                            $status_label = '⏳ Pending Approval';
+                            $status_label = 'Pending Approval';
                             if ($st === 'Approved') {
                                 $badge_color = 'background:#def7ec; color:#03543f; border: 1px solid #84e1bc;';
-                                $status_label = '✓ Approved';
+                                $status_label = 'Approved';
                             } elseif ($st === 'Cancelled') {
                                 $badge_color = 'background:#fee2e2; color:#991b1b; border: 1px solid #fca5a5;';
-                                $status_label = '✕ Cancelled / Rejected';
+                                $status_label = 'Cancelled / Rejected';
                             } elseif ($st === 'Completed') {
                                 $badge_color = 'background:#e2e8f0; color:#334155; border: 1px solid #cbd5e1;';
-                                $status_label = '✓ Completed';
+                                $status_label = 'Completed';
                             }
                             ?>
                             <tr>
@@ -392,10 +392,10 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
                                         <input type="hidden" name="action" value="update_order_status">
                                         <input type="hidden" name="order_id" value="<?php echo $ord['id']; ?>">
                                         <?php if ($st !== 'Approved' && $st !== 'Completed'): ?>
-                                            <button type="submit" name="status" value="Approved" class="btn-stock-add" style="background:#38a169; padding: 6px 10px;" title="Approve this order">✓ Approve</button>
+                                            <button type="submit" name="status" value="Approved" class="btn-stock-add" style="background:#38a169; padding: 6px 10px;" title="Approve this order">Approve</button>
                                         <?php endif; ?>
                                         <?php if ($st !== 'Cancelled'): ?>
-                                            <button type="submit" name="status" value="Cancelled" class="btn-stock-add" style="background:#e53e3e; padding: 6px 10px;" onclick="return confirm('Reject / Cancel Order #<?php echo $ord['id']; ?>?');" title="Reject or cancel order">✕ Reject</button>
+                                            <button type="submit" name="status" value="Cancelled" class="btn-stock-add" style="background:#e53e3e; padding: 6px 10px;" onclick="return confirm('Reject / Cancel Order #<?php echo $ord['id']; ?>?');" title="Reject or cancel order">Reject</button>
                                         <?php endif; ?>
                                         <?php if ($st === 'Approved'): ?>
                                             <button type="submit" name="status" value="Completed" class="btn-stock-add" style="background:#4a5568; padding: 6px 10px;" title="Mark as completed/picked up">Done</button>
