@@ -97,21 +97,16 @@ session_start();
                     surrounded by cats has always brought a sense of comfort,
                     warmth, and companionship, which inspired the dream of
                     creating a place where others could experience that same
-                    feeling.
-                </p>
-                <p>
-                    That dream grew into Purr & Pour Café, a cozy space where
-                    people can enjoy delicious coffee and treats while
+                    feeling.That dream grew into Purr & Pour Café, a cozy space
+                    where people can enjoy delicious coffee and treats while
                     spending time with friendly cats. Every part of the café
                     was created to feel comfortable and welcoming, giving
                     guests a place to relax, connect, and take a break from
-                    their busy day.
-                </p>
-                <p>
-                    Today, Purr & Pour continues to share the owner's love for
-                    cats with every person who walks through its doors. We hope
-                    every visit is filled with good coffee, peaceful moments,
-                    and wonderful memories with our feline friends.
+                    their busy day. Today, Purr & Pour continues to share 
+                    the owner's love for cats with every person who walks
+                    through its doors. We hope every visit is filled with
+                    good coffee, peaceful moments, and wonderful memories
+                    with our feline friends.
                 </p>
             </div>
         </section>
