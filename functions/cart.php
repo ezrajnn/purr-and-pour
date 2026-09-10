@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once __DIR__ . '/../database/db.php';
 
 /**
@@ -115,6 +115,8 @@ function add_to_cart($user_id, $product_id, $quantity = 1) {
         return false;
     }
 
+    $available_stock = intval($prod_res['stock']);
+
     // Check if item already exists in cart
     $check_sql = "SELECT id, quantity FROM cart WHERE user_id = ? AND product_id = ?";
     $stmt = $conn->prepare($check_sql);
@@ -124,15 +126,18 @@ function add_to_cart($user_id, $product_id, $quantity = 1) {
 
     if ($row = $result->fetch_assoc()) {
         $cart_id = intval($row['id']);
-        $update_sql = "UPDATE cart SET quantity = quantity + ? WHERE id = ? AND user_id = ?";
+        $current_qty = intval($row['quantity']);
+        $new_qty = min($available_stock, $current_qty + $quantity);
+        $update_sql = "UPDATE cart SET quantity = ? WHERE id = ? AND user_id = ?";
         $update_stmt = $conn->prepare($update_sql);
-        $update_stmt->bind_param("iii", $quantity, $cart_id, $user_id);
+        $update_stmt->bind_param("iii", $new_qty, $cart_id, $user_id);
         $success = $update_stmt->execute();
         $update_stmt->close();
     } else {
+        $add_qty = min($available_stock, $quantity);
         $insert_sql = "INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)";
         $insert_stmt = $conn->prepare($insert_sql);
-        $insert_stmt->bind_param("iii", $user_id, $product_id, $quantity);
+        $insert_stmt->bind_param("iii", $user_id, $product_id, $add_qty);
         $success = $insert_stmt->execute();
         $insert_stmt->close();
     }
@@ -160,19 +165,38 @@ function increase_cart_quantity($user_id, $cart_id = 0, $product_id = 0) {
     }
 
     if ($cart_id > 0) {
-        $sql = "UPDATE cart SET quantity = quantity + 1 WHERE id = ? AND user_id = ?";
+        $sql = "SELECT c.id, c.quantity, c.product_id, p.stock FROM cart c JOIN products p ON c.product_id = p.id WHERE c.id = ? AND c.user_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ii", $cart_id, $user_id);
     } elseif ($product_id > 0) {
-        $sql = "UPDATE cart SET quantity = quantity + 1 WHERE product_id = ? AND user_id = ?";
+        $sql = "SELECT c.id, c.quantity, c.product_id, p.stock FROM cart c JOIN products p ON c.product_id = p.id WHERE c.product_id = ? AND c.user_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ii", $product_id, $user_id);
     } else {
         return false;
     }
 
-    $success = $stmt->execute();
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $item = $res->fetch_assoc();
     $stmt->close();
+
+    if (!$item) {
+        return false;
+    }
+
+    $cur_qty = intval($item['quantity']);
+    $max_stock = intval($item['stock']);
+
+    if ($cur_qty >= $max_stock) {
+        return false; // Already reached maximum available stock
+    }
+
+    $target_cart_id = intval($item['id']);
+    $update_stmt = $conn->prepare("UPDATE cart SET quantity = quantity + 1 WHERE id = ? AND user_id = ?");
+    $update_stmt->bind_param("ii", $target_cart_id, $user_id);
+    $success = $update_stmt->execute();
+    $update_stmt->close();
     return $success;
 }
 

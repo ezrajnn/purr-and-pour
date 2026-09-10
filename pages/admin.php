@@ -133,10 +133,15 @@ $products_query = mysqli_query($conn, "SELECT * FROM products ORDER BY id ASC");
 $all_products = [];
 $total_inventory_items = 0;
 $total_stock_count = 0;
+$total_out_of_stock = 0;
 while ($p = mysqli_fetch_assoc($products_query)) {
     $all_products[] = $p;
     $total_inventory_items++;
-    $total_stock_count += intval($p['stock']);
+    $p_stk = intval($p['stock']);
+    $total_stock_count += $p_stk;
+    if ($p_stk <= 0) {
+        $total_out_of_stock++;
+    }
 }
 
 // Read Orders summary
@@ -168,7 +173,7 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
     </div>
 
     <!-- Quick Stats -->
-    <div class="stats-grid">
+    <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
         <div class="stat-card">
             <span>Total Products</span>
             <h3><?php echo $total_inventory_items; ?></h3>
@@ -176,6 +181,10 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
         <div class="stat-card">
             <span>Total In-Stock Units</span>
             <h3><?php echo $total_stock_count; ?></h3>
+        </div>
+        <div class="stat-card">
+            <span style="<?php echo $total_out_of_stock > 0 ? 'color:#c53030; font-weight:bold;' : ''; ?>">Out of Stock Items</span>
+            <h3 style="<?php echo $total_out_of_stock > 0 ? 'color:#c53030;' : ''; ?>"><?php echo $total_out_of_stock; ?></h3>
         </div>
         <div class="stat-card">
             <span>Total Placed Orders</span>
@@ -288,16 +297,22 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
                             <?php
                             $stk = intval($prod['stock']);
                             $badge_class = $stk > 10 ? 'stock-good' : ($stk > 0 ? 'stock-low' : 'stock-out');
+                            $is_out = ($stk <= 0);
                             ?>
-                            <tr>
+                            <tr style="<?php echo $is_out ? 'background-color: #fff5f5;' : ''; ?>">
                                 <td><img src="../elements/<?php echo htmlspecialchars($prod['image']); ?>" class="prod-thumb" alt=""></td>
                                 <td><strong>#<?php echo $prod['id']; ?></strong></td>
-                                <td><strong><?php echo htmlspecialchars($prod['name']); ?></strong></td>
+                                <td>
+                                    <strong><?php echo htmlspecialchars($prod['name']); ?></strong>
+                                    <?php if ($is_out): ?>
+                                        <span style="display:inline-block; margin-left: 6px; font-size: 10px; font-weight: 800; background: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 4px; border: 1px solid #fca5a5;">OUT OF STOCK</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td><?php echo htmlspecialchars($prod['category']); ?></td>
                                 <td>$<?php echo number_format($prod['price'], 2); ?></td>
                                 <td>
                                     <span class="stock-badge <?php echo $badge_class; ?>">
-                                        <?php echo $stk; ?> units
+                                        <?php echo $is_out ? '0 units (Out of Stock)' : ($stk . ' units'); ?>
                                     </span>
                                 </td>
                                 <td>
@@ -373,6 +388,11 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
                                 <td>
                                     <strong><?php echo htmlspecialchars($ord['customer_name']); ?></strong><br>
                                     <small style="color: #8c7b6d;"><?php echo htmlspecialchars($ord['customer_email']); ?></small>
+                                    <?php if (!empty($ord['address'])): ?>
+                                        <div style="font-size: 11px; color: #6b553e; background: #faf4ed; padding: 4px 6px; border-radius: 4px; margin-top: 4px; max-width: 220px; line-height: 1.3; border: 1px solid #eee1d3;">
+                                            📍 <?php echo nl2br(htmlspecialchars($ord['address'])); ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <div style="max-width: 250px; font-size: 12px; color: #555;">
@@ -380,7 +400,14 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
                                     </div>
                                 </td>
                                 <td><strong>$<?php echo number_format($ord['total_amount'], 2); ?></strong></td>
-                                <td><?php echo htmlspecialchars($ord['payment_method']); ?></td>
+                                <td>
+                                    <div style="font-weight: 600;"><?php echo htmlspecialchars($ord['payment_method']); ?></div>
+                                    <?php if (!empty($ord['reference_number'])): ?>
+                                        <div style="font-size: 11px; color: #0369a1; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; margin-top: 3px; font-family: monospace; display: inline-block;">
+                                            Ref: <?php echo htmlspecialchars($ord['reference_number']); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
                                 <td><small><?php echo date('M d, h:i A', strtotime($ord['created_at'])); ?></small></td>
                                 <td>
                                     <span class="stock-badge" style="<?php echo $badge_color; ?>">

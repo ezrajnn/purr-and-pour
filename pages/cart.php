@@ -115,12 +115,23 @@ $stmt->close();
                                     <span class="qty-val"><?php echo htmlspecialchars($item['quantity']); ?></span>
 
                                     <!-- Increase quantity button -->
-                                    <form action="../database/increaseQuantity.php" method="POST" style="display:inline;">
-                                        <input type="hidden" name="cart_id" value="<?php echo htmlspecialchars($item['id']); ?>">
-                                        <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($item['product_id']); ?>">
-                                        <button type="submit" class="qty-btn" title="Increase">+</button>
-                                    </form>
+                                    <?php
+                                    $item_stock = isset($menu_products[$pid]) ? intval($menu_products[$pid]['stock']) : 0;
+                                    $is_max = ($item['quantity'] >= $item_stock);
+                                    ?>
+                                    <?php if (!$is_max): ?>
+                                        <form action="../database/increaseQuantity.php" method="POST" style="display:inline;">
+                                            <input type="hidden" name="cart_id" value="<?php echo htmlspecialchars($item['id']); ?>">
+                                            <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($item['product_id']); ?>">
+                                            <button type="submit" class="qty-btn" title="Increase">+</button>
+                                        </form>
+                                    <?php else: ?>
+                                        <button type="button" class="qty-btn" title="Max stock reached" disabled style="opacity: 0.4; cursor: not-allowed;">+</button>
+                                    <?php endif; ?>
                                 </div>
+                                <?php if ($is_max): ?>
+                                    <div style="font-size: 11px; color: #c94a4a; font-weight: 700; margin-top: 4px;">Max stock reached</div>
+                                <?php endif; ?>
                             </td>
                             <td>
                                 <span class="cart-item-total"><strong>$<?php echo number_format($item['item_total'], 2); ?></strong></span>

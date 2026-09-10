@@ -148,6 +148,39 @@ $items_stmt->close();
                 </table>
             </div>
 
+            <!-- Receipt Customer & Payment Details at the Bottom -->
+            <div class="receipt-bottom-details" style="background: #faf7f2; border: 1px solid #ebdccb; border-radius: 12px; padding: 18px 20px; text-align: left; margin-bottom: 25px;">
+                <h4 style="font-size: 15px; color: #5b4530; margin-bottom: 12px; border-bottom: 1px solid #ede3d7; padding-bottom: 6px;">📋 Delivery & Payment Information</h4>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; font-size: 13px;">
+                    <div>
+                        <span style="display:block; color: #8c7b6d; font-size: 12px; font-weight: 600; text-transform: uppercase;">Customer Address:</span>
+                        <p style="color: #4a3b2c; font-weight: 600; margin-top: 3px; line-height: 1.4;">
+                            <?php echo !empty($order['address']) ? nl2br(htmlspecialchars($order['address'])) : '<em style="color:#a8998a;">Not provided</em>'; ?>
+                        </p>
+                    </div>
+
+                    <div>
+                        <span style="display:block; color: #8c7b6d; font-size: 12px; font-weight: 600; text-transform: uppercase;">Payment Method:</span>
+                        <p style="color: #4a3b2c; font-weight: 600; margin-top: 3px;">
+                            <?php echo htmlspecialchars($order['payment_method']); ?>
+                        </p>
+                    </div>
+
+                    <?php if (!empty($order['reference_number']) || $order['payment_method'] === 'GCash'): ?>
+                        <div>
+                            <span style="display:block; color: #0284c7; font-size: 12px; font-weight: 700; text-transform: uppercase;">GCash Reference Number:</span>
+                            <div style="margin-top: 3px;">
+                                <strong style="font-family: monospace; font-size: 15px; color: #0369a1; background: #e0f2fe; padding: 3px 8px; border-radius: 6px; display: inline-block;">
+                                    <?php echo htmlspecialchars($order['reference_number'] ?? 'N/A'); ?>
+                                </strong>
+                                <span style="display: block; font-size: 11px; color: #047857; margin-top: 3px; font-weight: 600;">✓ Payment Reference Recorded</span>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
             <div class="receipt-actions-group">
                 <a href="account.php" class="btn-order-more btn-order-history">📜 My Account & Transaction History</a>
                 <a href="menu.php" class="btn-order-more">🐾 Order More Treats</a>

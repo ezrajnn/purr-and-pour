@@ -26,7 +26,7 @@ if (!$user_data) {
 }
 
 // Fetch all transactions/orders placed by the user
-$sql = "SELECT o.id, o.payment_method, o.total_amount, o.status, o.created_at,
+$sql = "SELECT o.id, o.payment_method, o.reference_number, o.address, o.total_amount, o.status, o.created_at,
                GROUP_CONCAT(CONCAT(oi.product_name, ' (x', oi.quantity, ')') SEPARATOR ', ') as items_summary,
                COALESCE(SUM(oi.quantity), 0) as total_units
         FROM orders o
@@ -209,6 +209,11 @@ $stmt->close();
                                 </td>
                                 <td>
                                     <span style="color: #634b35; font-weight: 600;"><?php echo htmlspecialchars($ord['payment_method']); ?></span>
+                                    <?php if (!empty($ord['reference_number'])): ?>
+                                        <div style="font-size: 11px; color: #0369a1; background: #e0f2fe; padding: 1px 5px; border-radius: 4px; margin-top: 3px; font-family: monospace;">
+                                            Ref: <?php echo htmlspecialchars($ord['reference_number']); ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <span class="status-pill <?php echo $pill_class; ?>">

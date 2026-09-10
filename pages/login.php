@@ -2,6 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+//condition if the user is already logged in redirect ra sa homepage
 if (isset($_SESSION["user_id"]) && intval($_SESSION["user_id"]) > 0) {
     header("Location: ../index.php");
     exit();

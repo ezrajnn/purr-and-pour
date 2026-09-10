@@ -73,16 +73,35 @@ $default_email = $user_data['email'] ?? '';
 
 // Handle Place Order
 $error_msg = "";
+$entered_address = "";
+$entered_ref = "";
+$selected_payment = "Cash on Pickup";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $customer_name = trim($_POST['customer_name'] ?? '');
     $customer_email = trim($_POST['customer_email'] ?? '');
+    $address = trim($_POST['address'] ?? '');
     $payment_method = trim($_POST['payment_method'] ?? 'Cash on Pickup');
+    $reference_number = trim($_POST['reference_number'] ?? '');
+
+    $entered_address = $address;
+    $entered_ref = $reference_number;
+    $selected_payment = $payment_method;
 
     if (empty($customer_name)) {
         $error_msg = "Please provide your name for the order.";
+    } elseif (empty($address)) {
+        $error_msg = "Please provide your delivery/customer address.";
+    } elseif ($payment_method === 'GCash' && empty($reference_number)) {
+        $error_msg = "Please enter your GCash reference number to verify payment.";
     } else {
-        $order_stmt = $conn->prepare("INSERT INTO orders (user_id, customer_name, customer_email, payment_method, total_amount, status) VALUES (?, ?, ?, ?, ?, 'Pending')");
-        $order_stmt->bind_param("isssd", $user_id, $customer_name, $customer_email, $payment_method, $cart_subtotal);
+        // If not GCash, clear reference number
+        if ($payment_method !== 'GCash') {
+            $reference_number = null;
+        }
+
+        $order_stmt = $conn->prepare("INSERT INTO orders (user_id, customer_name, customer_email, address, payment_method, reference_number, total_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')");
+        $order_stmt->bind_param("isssssd", $user_id, $customer_name, $customer_email, $address, $payment_method, $reference_number, $cart_subtotal);
         
         if ($order_stmt->execute()) {
             $order_id = $conn->insert_id;
@@ -145,10 +164,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="checkout-form-section">
                 <form action="checkout.php" method="POST" id="checkout-form">
                     <div class="form-card">
-                        <h2 class="section-title">Customer Details</h2>
+                        <h2 class="section-title">Customer Details & Delivery Address</h2>
                         
                         <div class="form-group">
-                            <label for="customer_name">Full Name</label>
+                            <label for="customer_name">Full Name *</label>
                             <input type="text" id="customer_name" name="customer_name" value="<?php echo htmlspecialchars($default_name); ?>" required>
                         </div>
 
@@ -156,34 +175,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="customer_email">Email Address</label>
                             <input type="email" id="customer_email" name="customer_email" value="<?php echo htmlspecialchars($default_email); ?>" placeholder="your@email.com">
                         </div>
+
+                        <div class="form-group">
+                            <label for="address">Complete Address *</label>
+                            <textarea id="address" name="address" rows="3" required placeholder="House/Unit No., Street Name, Barangay, City/Municipality, Postal Code"><?php echo htmlspecialchars($entered_address); ?></textarea>
+                            <small style="color: #8c7b6d; font-size: 12px;">Please enter your full address where you wish to receive your café package.</small>
+                        </div>
                     </div>
 
                     <div class="form-card">
                         <h2 class="section-title">Payment Method</h2>
                         <div class="payment-options">
                             <label class="payment-option">
-                                <input type="radio" name="payment_method" value="Cash on Pickup" checked>
+                                <input type="radio" name="payment_method" value="Cash on Pickup" <?php if ($selected_payment === 'Cash on Pickup') echo 'checked'; ?> onchange="toggleGcashField()">
                                 <span class="payment-label">
-                                    <strong>Cash on Pickup</strong>
-                                    <small>Pay at the counter when you claim your order</small>
+                                    <strong>Cash on Pickup / Delivery</strong>
+                                    <small>Pay with cash upon claiming or delivery</small>
                                 </span>
                             </label>
 
                             <label class="payment-option">
-                                <input type="radio" name="payment_method" value="GCash">
+                                <input type="radio" name="payment_method" value="GCash" id="pm_gcash" <?php if ($selected_payment === 'GCash') echo 'checked'; ?> onchange="toggleGcashField()">
                                 <span class="payment-label">
-                                    <strong>GCash</strong>
-                                    <small>Pay via GCash QR at the café register</small>
+                                    <strong>GCash (Mobile Wallet)</strong>
+                                    <small>Send payment via GCash and enter your transaction reference number</small>
                                 </span>
                             </label>
+                        </div>
 
-                            <label class="payment-option">
-                                <input type="radio" name="payment_method" value="Credit / Debit Card">
-                                <span class="payment-label">
-                                    <strong>Credit / Debit Card</strong>
-                                    <small>Swipe or tap at our store POS</small>
-                                </span>
+                        <!-- GCash Reference Number Field (shown when GCash is selected) -->
+                        <div id="gcash-reference-group" class="form-group" style="margin-top: 18px; padding: 14px; background: #faf7f2; border: 1.5px dashed #c9baa9; border-radius: 10px; display: <?php echo ($selected_payment === 'GCash') ? 'block' : 'none'; ?>;">
+                            <label for="reference_number" style="display: flex; align-items: center; justify-content: space-between;">
+                                <span>GCash Reference Number *</span>
+                                <span style="font-size: 11px; color: #0284c7; font-weight: normal;">Paid already</span>
                             </label>
+                            <input type="text" id="reference_number" name="reference_number" value="<?php echo htmlspecialchars($entered_ref); ?>" placeholder="e.g. 1002 9845 1234 or 9012345678" style="background: #ffffff;">
+                            <small style="color: #6e5c4e; font-size: 12px; margin-top: 6px; display: block;">
+                                📱 Café GCash: <strong>0967 6767 6767</strong> (Purr & Pour Café). Please enter the reference number from your GCash payment confirmation SMS/Receipt.
+                            </small>
                         </div>
                     </div>
 
@@ -232,6 +261,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </main>
+
+<script>
+function toggleGcashField() {
+    const gcashRadio = document.getElementById('pm_gcash');
+    const gcashGroup = document.getElementById('gcash-reference-group');
+    const refInput = document.getElementById('reference_number');
+
+    if (gcashRadio && gcashRadio.checked) {
+        gcashGroup.style.display = 'block';
+        refInput.setAttribute('required', 'required');
+        refInput.focus();
+    } else {
+        gcashGroup.style.display = 'none';
+        refInput.removeAttribute('required');
+    }
+}
+
+// Run on page load in case GCash was previously selected
+document.addEventListener('DOMContentLoaded', function() {
+    toggleGcashField();
+});
+</script>
 
 </body>
 </html>
