@@ -31,6 +31,98 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
     $del_stmt->close();
 }
 
+// Delete User Account
+if (isset($_GET['action']) && $_GET['action'] === 'delete_user' && isset($_GET['user_id'])) {
+    $target_user_id = intval($_GET['user_id']);
+    if ($target_user_id === $user_id) {
+        $error = "You cannot delete your own logged-in admin account.";
+    } else {
+        $del_user_stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+        $del_user_stmt->bind_param("i", $target_user_id);
+        if ($del_user_stmt->execute()) {
+            $notice = "Account #$target_user_id deleted successfully.";
+        } else {
+            $error = "Failed to delete account. Error: " . $conn->error;
+        }
+        $del_user_stmt->close();
+    }
+}
+
+// Update User Account (Edit Name, Email, Role, and Optional Password)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_user') {
+    $edit_uid = intval($_POST['user_id'] ?? 0);
+    $edit_name = trim($_POST['name'] ?? '');
+    $edit_email = trim($_POST['email'] ?? '');
+    $edit_role = trim($_POST['role'] ?? 'customer');
+    $new_password = $_POST['new_password'] ?? '';
+
+    // Validate role
+    if (!in_array($edit_role, ['admin', 'customer'])) {
+        $edit_role = 'customer';
+    }
+
+    if ($edit_uid <= 0 || empty($edit_name) || empty($edit_email)) {
+        $error = "Please provide valid user name and email.";
+    } else {
+        // Check if email belongs to another user
+        $email_chk = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+        $email_chk->bind_param("si", $edit_email, $edit_uid);
+        $email_chk->execute();
+        $email_chk_res = $email_chk->get_result();
+
+        if ($email_chk_res->num_rows > 0) {
+            $error = "The email '{$edit_email}' is already used by another account.";
+        } else {
+            if (!empty($new_password)) {
+                $hash = password_hash($new_password, PASSWORD_DEFAULT);
+                $update_u_stmt = $conn->prepare("UPDATE users SET name = ?, email = ?, role = ?, password = ? WHERE id = ?");
+                $update_u_stmt->bind_param("ssssi", $edit_name, $edit_email, $edit_role, $hash, $edit_uid);
+            } else {
+                $update_u_stmt = $conn->prepare("UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?");
+                $update_u_stmt->bind_param("sssi", $edit_name, $edit_email, $edit_role, $edit_uid);
+            }
+
+            if ($update_u_stmt->execute()) {
+                $notice = "User account #$edit_uid updated successfully!";
+                if ($edit_uid === $user_id) {
+                    $_SESSION['name'] = $edit_name;
+                    $_SESSION['email'] = $edit_email;
+                    $_SESSION['role'] = $edit_role;
+                }
+            } else {
+                $error = "Failed to update user account: " . $conn->error;
+            }
+            $update_u_stmt->close();
+        }
+        $email_chk->close();
+    }
+}
+
+// Quick Role Change from Table
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'quick_change_role') {
+    $target_uid = intval($_POST['user_id'] ?? 0);
+    $new_role = trim($_POST['new_role'] ?? 'customer');
+
+    if (!in_array($new_role, ['admin', 'customer'])) {
+        $new_role = 'customer';
+    }
+
+    if ($target_uid <= 0) {
+        $error = "Invalid user specified.";
+    } elseif ($target_uid === $user_id && $new_role !== 'admin') {
+        $error = "You cannot demote your own account from admin.";
+    } else {
+        $role_stmt = $conn->prepare("UPDATE users SET role = ? WHERE id = ?");
+        $role_stmt->bind_param("si", $new_role, $target_uid);
+        if ($role_stmt->execute()) {
+            $notice = "Account #$target_uid role changed to '{$new_role}' successfully!";
+        } else {
+            $error = "Failed to update role: " . $conn->error;
+        }
+        $role_stmt->close();
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_order_status') {
     $order_id = intval($_POST['order_id']);
     $new_status = trim($_POST['status'] ?? 'Approved');
@@ -135,6 +227,35 @@ while ($p = mysqli_fetch_assoc($products_query)) {
 // Read Orders summary
 $orders_count_res = mysqli_query($conn, "SELECT COUNT(*) as total_orders, COALESCE(SUM(total_amount), 0) as total_sales FROM orders");
 $orders_summary = mysqli_fetch_assoc($orders_count_res);
+
+// Edit User check
+$edit_user = null;
+if (isset($_GET['edit_user'])) {
+    $euid = intval($_GET['edit_user']);
+    $eu_stmt = $conn->prepare("SELECT id, name, email, role FROM users WHERE id = ?");
+    $eu_stmt->bind_param("i", $euid);
+    $eu_stmt->execute();
+    $edit_user = $eu_stmt->get_result()->fetch_assoc();
+    $eu_stmt->close();
+}
+
+// Fetch all registered accounts
+$users_query = mysqli_query($conn, "SELECT u.id, u.name, u.email, u.role, COUNT(DISTINCT o.id) AS order_count FROM users u LEFT JOIN orders o ON u.id = o.user_id GROUP BY u.id ORDER BY u.id ASC");
+$all_users = [];
+$total_users_count = 0;
+$admin_count = 0;
+$customer_count = 0;
+if ($users_query) {
+    while ($urow = mysqli_fetch_assoc($users_query)) {
+        $all_users[] = $urow;
+        $total_users_count++;
+        if ($urow['role'] === 'admin') {
+            $admin_count++;
+        } else {
+            $customer_count++;
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -156,11 +277,13 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
             <p class="admin-subtitle">Manage stock levels, add products, and update café menu items</p>
         </div>
         <div class="admin-nav-links">
+            <a href="#accounts-section" class="admin-link-live" style="background:#e4d7c7; padding:6px 12px; border-radius:6px;">Registered Accounts</a>
+            <a href="#orders-section" class="admin-link-live" style="background:#e4d7c7; padding:6px 12px; border-radius:6px;">Orders</a>
             <a href="menu.php" class="admin-link-live">← View Menu</a>
         </div>
     </div>
 
-    <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+    <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
         <div class="stat-card">
             <span>Total Products</span>
             <h3><?php echo $total_inventory_items; ?></h3>
@@ -180,6 +303,10 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
         <div class="stat-card">
             <span>Gross Recorded Sales</span>
             <h3>$<?php echo number_format($orders_summary['total_sales'] ?? 0, 2); ?></h3>
+        </div>
+        <div class="stat-card">
+            <span>Registered Accounts</span>
+            <h3><?php echo $total_users_count; ?> <small style="font-size:12px; font-weight:normal; color:#8c7b6d;">(<?php echo $admin_count; ?> Admin, <?php echo $customer_count; ?> Customer)</small></h3>
         </div>
     </div>
 
@@ -417,6 +544,134 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
                                             <button type="submit" name="status" value="Pending" class="btn-stock-add" style="background:#d97706; padding: 6px 10px;" title="Reopen as pending">Reset</button>
                                         <?php endif; ?>
                                     </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Registered Accounts Management Section -->
+    <div class="card" id="accounts-section" style="margin-top: 30px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+            <div>
+                <h2>Registered Accounts</h2>
+                <p style="color: #8c7b6d; font-size: 13px; margin-top: 3px;">View and manage users, change account roles, edit details, or remove accounts.</p>
+            </div>
+            <?php if ($edit_user): ?>
+                <a href="admin.php#accounts-section" style="font-size: 13px; color: #785338; font-weight: bold; text-decoration: underline;">+ Cancel Editing User</a>
+            <?php endif; ?>
+        </div>
+
+        <?php if ($edit_user): ?>
+            <!-- Edit User Form Box -->
+            <div style="background: #faf6f0; border: 1px solid #e2d3c2; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                <h3 style="font-size: 16px; color: #5b4530; margin-bottom: 12px;">✏ Edit Account: <?php echo htmlspecialchars($edit_user['name']); ?> (ID #<?php echo $edit_user['id']; ?>)</h3>
+                <form action="admin.php#accounts-section" method="POST" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
+                    <input type="hidden" name="action" value="update_user">
+                    <input type="hidden" name="user_id" value="<?php echo $edit_user['id']; ?>">
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="edit_user_name" style="font-size: 12px; font-weight: bold; color: #6b553e;">Full Name *</label>
+                        <input type="text" id="edit_user_name" name="name" required value="<?php echo htmlspecialchars($edit_user['name']); ?>" style="width: 100%; padding: 8px 10px; border: 1px solid #dcd4cb; border-radius: 6px; font-size: 13px;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="edit_user_email" style="font-size: 12px; font-weight: bold; color: #6b553e;">Email Address *</label>
+                        <input type="email" id="edit_user_email" name="email" required value="<?php echo htmlspecialchars($edit_user['email']); ?>" style="width: 100%; padding: 8px 10px; border: 1px solid #dcd4cb; border-radius: 6px; font-size: 13px;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="edit_user_role" style="font-size: 12px; font-weight: bold; color: #6b553e;">Role *</label>
+                        <select id="edit_user_role" name="role" style="width: 100%; padding: 8px 10px; border: 1px solid #dcd4cb; border-radius: 6px; font-size: 13px;">
+                            <option value="customer" <?php if ($edit_user['role'] === 'customer') echo 'selected'; ?>>Customer</option>
+                            <option value="admin" <?php if ($edit_user['role'] === 'admin') echo 'selected'; ?>>Admin</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="edit_user_pass" style="font-size: 12px; font-weight: bold; color: #6b553e;">New Password <small style="font-weight: normal; color:#999;">(optional)</small></label>
+                        <input type="password" id="edit_user_pass" name="new_password" placeholder="Leave blank to keep current" style="width: 100%; padding: 8px 10px; border: 1px solid #dcd4cb; border-radius: 6px; font-size: 13px;">
+                    </div>
+
+                    <div style="display: flex; gap: 8px;">
+                        <button type="submit" class="btn-stock-add" style="background: #634b35; padding: 9px 18px; font-size: 13px; border-radius: 6px;">Save Changes</button>
+                        <a href="admin.php#accounts-section" class="btn-stock-add" style="background: #a89f91; padding: 9px 14px; font-size: 13px; text-decoration: none; border-radius: 6px; display: inline-block;">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        <?php endif; ?>
+
+        <?php if (empty($all_users)): ?>
+            <p style="color: #8c7b6d; padding: 15px 0;">No accounts found.</p>
+        <?php else: ?>
+            <div style="overflow-x: auto;">
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Total Orders</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($all_users as $usr): ?>
+                            <?php
+                            $is_self = ($usr['id'] == $user_id);
+                            $is_admin = ($usr['role'] === 'admin');
+                            $role_badge = $is_admin
+                                ? 'background:#e0e7ff; color:#3730a3; border:1px solid #c7d2fe;'
+                                : 'background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0;';
+                            ?>
+                            <tr style="<?php echo $is_self ? 'background-color: #fdfaf6;' : ''; ?>">
+                                <td>
+                                    <strong>#<?php echo $usr['id']; ?></strong>
+                                    <?php if ($is_self): ?>
+                                        <span style="font-size:10px; background:#634b35; color:#fff; padding:2px 5px; border-radius:4px; margin-left:4px;">You</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <strong><?php echo htmlspecialchars($usr['name']); ?></strong>
+                                </td>
+                                <td>
+                                    <span style="color: #4a5568;"><?php echo htmlspecialchars($usr['email']); ?></span>
+                                </td>
+                                <td>
+                                    <?php if ($is_self): ?>
+                                        <span class="stock-badge" style="<?php echo $role_badge; ?> text-transform: uppercase; font-size: 11px;">
+                                            <?php echo htmlspecialchars($usr['role']); ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <form action="admin.php#accounts-section" method="POST" style="display:inline-flex; align-items:center; gap: 4px;">
+                                            <input type="hidden" name="action" value="quick_change_role">
+                                            <input type="hidden" name="user_id" value="<?php echo $usr['id']; ?>">
+                                            <select name="new_role" onchange="this.form.submit()" style="padding: 3px 6px; font-size: 12px; font-weight: 600; border-radius: 6px; border: 1px solid <?php echo $is_admin ? '#c7d2fe' : '#a7f3d0'; ?>; <?php echo $role_badge; ?> cursor: pointer;">
+                                                <option value="customer" <?php if ($usr['role'] === 'customer') echo 'selected'; ?>>CUSTOMER</option>
+                                                <option value="admin" <?php if ($usr['role'] === 'admin') echo 'selected'; ?>>ADMIN</option>
+                                            </select>
+                                        </form>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <span style="font-size: 13px; color: #555;">
+                                        <?php echo $usr['order_count']; ?> orders
+                                    </span>
+                                </td>
+                                <td class="action-links">
+                                    <a href="admin.php?edit_user=<?php echo $usr['id']; ?>#accounts-section" class="action-edit" title="Edit this user">Edit</a>
+                                    <?php if ($is_self): ?>
+                                        <span style="font-size: 12px; color: #a0aec0; font-style: italic; margin-right: 8px;">(Current Account)</span>
+                                    <?php else: ?>
+                                        <a href="admin.php?action=delete_user&user_id=<?php echo $usr['id']; ?>#accounts-section"
+                                           class="action-delete"
+                                           onclick="return confirm('Are you sure you want to delete account \'<?php echo htmlspecialchars(addslashes($usr['name'])); ?>\' (<?php echo htmlspecialchars(addslashes($usr['email'])); ?>)? This will also delete their cart items and orders.');"
+                                           title="Delete this user">Delete</a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

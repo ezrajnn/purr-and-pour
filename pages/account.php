@@ -91,7 +91,6 @@ $stmt->close();
                     <span class="role-badge">
                         <?php echo ($user_data['role'] === 'admin') ? 'Administrator' : 'Café Member'; ?>
                     </span>
-                    <span style="font-size: 12px; color: #8c7b6d; margin-left: 8px;">User ID #<?php echo $user_data['id']; ?></span>
                 </div>
             </div>
         </div>
