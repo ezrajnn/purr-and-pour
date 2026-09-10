@@ -100,7 +100,7 @@ $stmt->close();
             <?php if ($user_data['role'] === 'admin'): ?>
                 <a href="admin.php" class="btn-order-now" style="background-color: #8c6d48;">⚙ Admin Dashboard</a>
             <?php endif; ?>
-            <a href="menu.php" class="btn-order-now">☕ Order from Menu</a>
+            <a href="menu.php" class="btn-order-now">Order from Menu</a>
             <a href="../functions/logout.php" class="receipt-link-btn" style="color:#b91c1c; border-color:#fca5a5;">Log out</a>
         </div>
     </div>

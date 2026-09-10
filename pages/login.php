@@ -2,6 +2,11 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+if (isset($_SESSION["user_id"]) && intval($_SESSION["user_id"]) > 0) {
+    header("Location: ../index.php");
+    exit();
+}
+
 require_once __DIR__ . '/../database/db.php';
 
 $message = "";
