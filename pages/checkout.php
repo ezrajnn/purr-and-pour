@@ -94,6 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_msg = "Please provide your delivery/customer address.";
     } elseif ($payment_method === 'GCash' && empty($reference_number)) {
         $error_msg = "Please enter your GCash reference number to verify payment.";
+    } elseif ($payment_method === 'GCash' && !preg_match('/^\d{12}$/', $reference_number)) {
+        $error_msg = "The GCash reference number must be exactly 12 numeric digits (numbers only).";
     } else {
         // If not GCash, clear reference number
         if ($payment_method !== 'GCash') {
@@ -178,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div class="form-group">
                             <label for="address">Complete Address *</label>
-                            <textarea id="address" name="address" rows="3" required placeholder="House/Unit No., Street Name, Barangay, City/Municipality, Postal Code"><?php echo htmlspecialchars($entered_address); ?></textarea>
+                            <textarea id="address" name="address" rows="3" required placeholder=><?php echo htmlspecialchars($entered_address); ?></textarea>
                             <small style="color: #8c7b6d; font-size: 12px;">Please enter your full address where you wish to receive your café package.</small>
                         </div>
                     </div>
@@ -207,11 +209,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div id="gcash-reference-group" class="form-group" style="margin-top: 18px; padding: 14px; background: #faf7f2; border: 1.5px dashed #c9baa9; border-radius: 10px; display: <?php echo ($selected_payment === 'GCash') ? 'block' : 'none'; ?>;">
                             <label for="reference_number" style="display: flex; align-items: center; justify-content: space-between;">
                                 <span>GCash Reference Number *</span>
-                                <span style="font-size: 11px; color: #0284c7; font-weight: normal;">Paid already</span>
                             </label>
-                            <input type="text" id="reference_number" name="reference_number" value="<?php echo htmlspecialchars($entered_ref); ?>" placeholder="e.g. 1002 9845 1234 or 9012345678" style="background: #ffffff;">
+                            <input type="text" id="reference_number" name="reference_number" value="<?php echo htmlspecialchars($entered_ref); ?>" placeholder="12-digit reference number (e.g. 100298451234)" maxlength="12" pattern="\d{12}" inputmode="numeric" autocomplete="off" style="background: #ffffff;">
                             <small style="color: #6e5c4e; font-size: 12px; margin-top: 6px; display: block;">
-                                📱 Café GCash: <strong>0967 6767 6767</strong> (Purr & Pour Café). Please enter the reference number from your GCash payment confirmation SMS/Receipt.
+                                Café GCash: <strong>0967 6767 6767</strong> (Purr & Pour Café). Must be exactly 12 numeric digits from your GCash receipt.
                             </small>
                         </div>
                     </div>
@@ -281,6 +282,21 @@ function toggleGcashField() {
 // Run on page load in case GCash was previously selected
 document.addEventListener('DOMContentLoaded', function() {
     toggleGcashField();
+
+    const refInput = document.getElementById('reference_number');
+    if (refInput) {
+        // Prevent typing non-numeric characters
+        refInput.addEventListener('keypress', function(e) {
+            if (!/^\d$/.test(e.key)) {
+                e.preventDefault();
+            }
+        });
+
+        // Strip non-digits and cap at 12 on paste/input
+        refInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 12);
+        });
+    }
 });
 </script>
 

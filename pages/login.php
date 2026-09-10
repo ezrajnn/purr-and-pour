@@ -3,26 +3,32 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-//condition if the user is already logged in redirect ra sa homepage
+// Check if the user is already logged in.
 if (isset($_SESSION["user_id"]) && intval($_SESSION["user_id"]) > 0) {
     header("Location: ../index.php");
     exit();
 }
 
+// Connect to the database.
 require_once __DIR__ . '/../database/db.php';
 
 $message = "";
+
+// Check if the user was redirected here because login is required.
 if (isset($_GET["error"]) && $_GET["error"] === "login_required") {
     $message = "Please log in to add items to your cart.";
 }
 
+// Check if the login form was submitted using the POST method.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = isset($_POST["email"]) ? trim($_POST["email"]) : "";
     $password = isset($_POST["password"]) ? $_POST["password"] : "";
-
+    
     if (empty($email) || empty($password)) {
         $message = "Please fill in all fields.";
-    } else {
+    }
+     
+    else {
         $sql = "SELECT * FROM users WHERE email = ?";
         $stmt = $conn->prepare($sql);
 
@@ -31,10 +37,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt->execute();
             $result = $stmt->get_result();
 
-            if ($result->num_rows === 1) {
+        if ($result->num_rows === 1) {
                 $user = $result->fetch_assoc();
 
-                if (password_verify($password, $user["password"])) {
+            if (password_verify($password, $user["password"])) {
                     $_SESSION["user_id"] = $user["id"];
                     $_SESSION["name"] = $user["name"];
                     $_SESSION["email"] = $user["email"];
@@ -42,67 +48,105 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                     header("Location: ../index.php");
                     exit();
-                } else {
+                } 
+                
+                else {
                     $message = "Incorrect password.";
                 }
-            } else {
+            } 
+            
+            else {
                 $message = "Email not found.";
             }
 
             $stmt->close();
-        } else {
+        } 
+        
+        else {
             $message = "Database error. Please try again later.";
         }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="../style/login.css">
     <link rel="stylesheet" href="../style/loginHeader.css">
+
 </head>
 <body>
 
-<?php require_once __DIR__ . '/../navigation/header.php'; ?>
+<?php
 
-    <div class="login-wrapper">
-        <div class="login-container">
-            <h1>Log in</h1>
-            <p class="login-subtitle">
-                Welcome back! Log in to continue to Purr & Pour.
-            </p>
-            <?php
-            if (!empty($message)) {
-                echo "<p class='message'>" . htmlspecialchars($message) . "</p>";
-            }
-            ?>
+require_once __DIR__ . '/../navigation/header.php';
+?>
 
-            <form method="POST">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required>
-                </div>
+<div class="login-wrapper">
+    <div class="login-container">
 
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" required>
-                </div>
+        <h1>Log in</h1>
 
-                <button type="submit" class="login-btn">
-                    Log in
-                </button>
-            </form>
+        <p class="login-subtitle">
+            Welcome back! Log in to continue to Purr & Pour.
+        </p>
 
-            <p class="register-text">
-                Don't have an account yet?
-                <a href="register.php">Register</a>
-            </p>
-        </div>
+
+        <?php
+        if (!empty($message)) {
+            echo "<p class='message'>" . htmlspecialchars($message) . "</p>";
+        }
+        ?>
+
+        <form method="POST">
+        <div class="form-group">
+
+                <label>Email</label>
+
+                <input
+                    type="email"
+                    name="email"
+
+                    value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>"
+
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    name="password"
+                    required
+                >
+
+            </div>
+
+            <button type="submit" class="login-btn">
+                Log in
+            </button>
+
+        </form>
+
+        <p class="register-text">
+
+            Don't have an account yet?
+            <a href="register.php">Register</a>
+
+        </p>
+
     </div>
+
+</div>
 
 </body>
 </html>

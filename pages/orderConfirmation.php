@@ -74,7 +74,7 @@ $items_stmt->close();
             <?php
             $current_status = $order['status'] ?? 'Pending';
             $status_class = 'status-pending';
-            $status_title = '⏳ Pending Admin Approval';
+            $status_title = 'Pending Admin Approval';
             $status_msg = 'Your order has been sent to the café! The admin will review and approve your order shortly.';
 
             if ($current_status === 'Approved' || $current_status === 'Confirmed') {
@@ -150,7 +150,7 @@ $items_stmt->close();
 
             <!-- Receipt Customer & Payment Details at the Bottom -->
             <div class="receipt-bottom-details" style="background: #faf7f2; border: 1px solid #ebdccb; border-radius: 12px; padding: 18px 20px; text-align: left; margin-bottom: 25px;">
-                <h4 style="font-size: 15px; color: #5b4530; margin-bottom: 12px; border-bottom: 1px solid #ede3d7; padding-bottom: 6px;">📋 Delivery & Payment Information</h4>
+                <h4 style="font-size: 15px; color: #5b4530; margin-bottom: 12px; border-bottom: 1px solid #ede3d7; padding-bottom: 6px;">Delivery & Payment Information</h4>
                 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; font-size: 13px;">
                     <div>
@@ -174,7 +174,7 @@ $items_stmt->close();
                                 <strong style="font-family: monospace; font-size: 15px; color: #0369a1; background: #e0f2fe; padding: 3px 8px; border-radius: 6px; display: inline-block;">
                                     <?php echo htmlspecialchars($order['reference_number'] ?? 'N/A'); ?>
                                 </strong>
-                                <span style="display: block; font-size: 11px; color: #047857; margin-top: 3px; font-weight: 600;">✓ Payment Reference Recorded</span>
+                                <span style="display: block; font-size: 11px; color: #047857; margin-top: 3px; font-weight: 600;">Payment Reference Recorded</span>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -182,8 +182,8 @@ $items_stmt->close();
             </div>
 
             <div class="receipt-actions-group">
-                <a href="account.php" class="btn-order-more btn-order-history">📜 My Account & Transaction History</a>
-                <a href="menu.php" class="btn-order-more">🐾 Order More Treats</a>
+                <a href="account.php" class="btn-order-more btn-order-history">My Account & Transaction History</a>
+                <a href="menu.php" class="btn-order-more">Order More Treats</a>
             </div>
         </div>
     </div>

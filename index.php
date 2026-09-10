@@ -43,9 +43,6 @@ session_start();
                 <a href="pages/menu.php" class="order-btn">
                     Order Now ⟶
                 </a>
-                <a href="pages/menu.php" class="menu-btn">
-                    Menu
-                </a>
             </div>
         </div>
 
@@ -86,16 +83,13 @@ session_start();
             <div class="drink-card">
                 <div class="drink-image">
                     <img
-                        src="elements/drink1.png"
+                        src="elements/drink_1.png"
                         alt="Chocolate Frappe">
                 </div>
                 <a href="pages/menu.php" class="drink-info">
                     <h3>
-                        Chocolate Frappe
+                        Latte Coffee
                     </h3>
-                    <p>
-                        $30
-                    </p>
                 </a>
             </div>
 
@@ -103,16 +97,13 @@ session_start();
             <div class="drink-card">
                 <div class="drink-image">
                     <img
-                        src="elements/drink2.png"
+                        src="elements/drink_2.png"
                         alt="Milk Tea">
                 </div>
                 <a href="pages/menu.php" class="drink-info">
                     <h3>
-                        Milktea
+                        Hot Americano
                     </h3>
-                    <p>
-                        $20
-                    </p>
                 </a>
             </div>
 
@@ -120,16 +111,13 @@ session_start();
             <div class="drink-card">
                 <div class="drink-image">
                     <img
-                        src="elements/caramel.png"
+                        src="elements/drink_3.png"
                         alt="Caramel Macchiato">
                 </div>
                 <a href="pages/menu.php" class="drink-info">
                     <h3>
-                        Caramel Macchiato
+                    Espresso Coffee
                     </h3>
-                    <p>
-                        $25
-                    </p>
                 </a>
             </div>
 
@@ -137,16 +125,13 @@ session_start();
             <div class="drink-card">
                 <div class="drink-image">
                     <img
-                        src="elements/strawberry.png"
-                        alt="Strawberry Shake">
+                        src="elements/drink_4.png"
+                        alt="Hot Mocha">
                 </div>
                 <a href="pages/menu.php" class="drink-info">
                     <h3>
-                        Strawberry Shake
+                        Hot Mocha
                     </h3>
-                    <p>
-                        $28
-                    </p>
                 </a>
             </div>
         </div>
@@ -382,9 +367,7 @@ session_start();
                 <h2>
                     What our Guests say
                 </h2>
-                <a href="#reviews" class="btn-view-all">
-                    View all Reviews ⟶
-                </a>
+            
             </div>
             <div class="reviews-grid">
 

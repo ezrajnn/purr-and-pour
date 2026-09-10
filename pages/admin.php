@@ -4,7 +4,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require_once __DIR__ . '/../database/db.php';
 
-// Access Control: Must be logged in as admin
 if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
     exit();
@@ -20,11 +19,6 @@ if (!$user_row || $user_row['role'] !== 'admin') {
 $notice = "";
 $error = "";
 
-// -------------------------------------------------------------
-// CRUD Operations
-// -------------------------------------------------------------
-
-// 1. DELETE PRODUCT (D in CRUD)
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
     $del_id = intval($_GET['id']);
     $del_stmt = $conn->prepare("DELETE FROM products WHERE id = ?");
@@ -37,7 +31,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
     $del_stmt->close();
 }
 
-// 2. APPROVE / UPDATE ORDER STATUS
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_order_status') {
     $order_id = intval($_POST['order_id']);
     $new_status = trim($_POST['status'] ?? 'Approved');
@@ -51,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $status_stmt->close();
 }
 
-// 3. QUICK ADD / DEDUCT STOCKS (Supports both + and -)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'adjust_stock') {
     $prod_id = intval($_POST['product_id']);
     $adjust_type = $_POST['adjust_type'] ?? 'add';
@@ -70,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-// 4. CREATE PRODUCT (C in CRUD)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_product') {
     $name = trim($_POST['name'] ?? '');
     $category = trim($_POST['category'] ?? 'Hot Drinks');
@@ -93,7 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-// 4. UPDATE PRODUCT (U in CRUD)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_product') {
     $edit_id = intval($_POST['product_id']);
     $name = trim($_POST['name'] ?? '');
@@ -117,7 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-// If editing a product, fetch its details
 $edit_product = null;
 if (isset($_GET['edit'])) {
     $edit_id = intval($_GET['edit']);
@@ -128,7 +117,6 @@ if (isset($_GET['edit'])) {
     $edit_stmt->close();
 }
 
-// READ PRODUCTS (R in CRUD)
 $products_query = mysqli_query($conn, "SELECT * FROM products ORDER BY id ASC");
 $all_products = [];
 $total_inventory_items = 0;
@@ -172,7 +160,6 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
         </div>
     </div>
 
-    <!-- Quick Stats -->
     <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
         <div class="stat-card">
             <span>Total Products</span>
@@ -205,8 +192,8 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
     <?php endif; ?>
 
     <div class="admin-grid">
-        <!-- Product Create / Edit Form (C & U in CRUD) -->
-        <div class="card">
+
+    <div class="card">
             <h2><?php echo $edit_product ? "✏ Edit Product #{$edit_product['id']}" : "Add New Product"; ?></h2>
             
             <form action="admin.php" method="POST">
@@ -275,7 +262,6 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
             </form>
         </div>
 
-        <!-- Inventory Table !-->
         <div class="card">
             <h2>Live Inventory & Stock Controller</h2>
             <div style="overflow-x: auto;">
@@ -390,7 +376,7 @@ $orders_summary = mysqli_fetch_assoc($orders_count_res);
                                     <small style="color: #8c7b6d;"><?php echo htmlspecialchars($ord['customer_email']); ?></small>
                                     <?php if (!empty($ord['address'])): ?>
                                         <div style="font-size: 11px; color: #6b553e; background: #faf4ed; padding: 4px 6px; border-radius: 4px; margin-top: 4px; max-width: 220px; line-height: 1.3; border: 1px solid #eee1d3;">
-                                            📍 <?php echo nl2br(htmlspecialchars($ord['address'])); ?>
+                                             <?php echo nl2br(htmlspecialchars($ord['address'])); ?>
                                         </div>
                                     <?php endif; ?>
                                 </td>

@@ -49,7 +49,7 @@ foreach ($menu_products as $prod) {
 
     <?php if (isset($_GET['added'])): ?>
         <div class="cart-notification">
-            <span>✓ Item successfully added to your cart!</span>
+            <span>Item successfully added to your cart!</span>
             <a href="cart.php" class="view-cart-link">View Cart</a>
         </div>
     <?php endif; ?>
