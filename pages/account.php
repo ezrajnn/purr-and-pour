@@ -104,25 +104,6 @@ $stmt->close();
         </div>
     </div>
 
-    <!-- Quick Stats -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <span>Total Orders</span>
-            <h3><?php echo $total_orders; ?></h3>
-        </div>
-        <div class="stat-card">
-            <span>Total Spent</span>
-            <h3>$<?php echo number_format($total_spent, 2); ?></h3>
-        </div>
-        <div class="stat-card">
-            <span style="color: #03543f;">Approved Orders</span>
-            <h3 style="color: #03543f;"><?php echo $approved_count; ?></h3>
-        </div>
-        <div class="stat-card">
-            <span style="color: #854d0e;">Pending Approval</span>
-            <h3 style="color: #854d0e;"><?php echo $pending_count; ?></h3>
-        </div>
-    </div>
 
     <!-- Transaction History Section -->
     <div class="orders-section">
