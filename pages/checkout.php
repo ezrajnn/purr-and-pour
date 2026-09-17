@@ -178,11 +178,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="email" id="customer_email" name="customer_email" value="<?php echo htmlspecialchars($default_email); ?>" placeholder="your@email.com">
                         </div>
 
-                        <div class="form-group">
-                            <label for="address">Complete Address *</label>
-                            <textarea id="address" name="address" rows="3" required placeholder=><?php echo htmlspecialchars($entered_address); ?></textarea>
-                            <small style="color: #8c7b6d; font-size: 12px;">Please enter your full address where you wish to receive your café package.</small>
-                        </div>
                     </div>
 
                     <div class="form-card">
@@ -191,8 +186,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label class="payment-option">
                                 <input type="radio" name="payment_method" value="Cash on Pickup" <?php if ($selected_payment === 'Cash on Pickup') echo 'checked'; ?> onchange="toggleGcashField()">
                                 <span class="payment-label">
-                                    <strong>Cash on Pickup / Delivery</strong>
-                                    <small>Pay with cash upon claiming or delivery</small>
+                                    <strong>Cash on Pickup</strong>
+                                    <small>Pay with cash upon claiming</small>
                                 </span>
                             </label>
 
