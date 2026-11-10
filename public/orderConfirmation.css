@@ -1,0 +1,65 @@
+﻿/* =========================================================
+   Order Confirmation & Receipt Page Styles
+   ========================================================= */
+
+.order-status-banner {
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.order-status-banner.status-pending {
+    background-color: #fef08a;
+    border: 1.5px solid #fde047;
+    color: #854d0e;
+}
+
+.order-status-banner.status-approved {
+    background-color: #def7ec;
+    border: 1.5px solid #84e1bc;
+    color: #03543f;
+}
+
+.order-status-banner.status-cancelled {
+    background-color: #fee2e2;
+    border: 1.5px solid #fca5a5;
+    color: #991b1b;
+}
+
+.order-status-banner.status-completed {
+    background-color: #e2e8f0;
+    border: 1.5px solid #cbd5e1;
+    color: #334155;
+}
+
+.order-status-title {
+    font-weight: 800;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.order-status-desc {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.receipt-actions-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.btn-order-history {
+    background: linear-gradient(135deg, #5b4530, #3e2d1f);
+}
+
+.receipt-meta-status {
+    font-weight: 800;
+}
+
+.receipt-table-num {
+    text-align: right;
+}

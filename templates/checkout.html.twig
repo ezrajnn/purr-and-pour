@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Checkout | Purr & Pour Café{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('loginHeader.css') }}">
+    <link rel="stylesheet" href="{{ asset('checkout.css') }}">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% include 'navigation/header.html.twig' %}
+
+    <main class="checkout-page">
+        <div class="checkout-container">
+            <div class="checkout-header">
+                <h1>Complete Your Order</h1>
+                <p>Review your items and enter details for pickup / payment.</p>
+                <a href="{{ path('cart') }}">← Return to Cart</a>
+            </div>
+
+            <div class="checkout-grid">
+                <!-- Left Column: Forms -->
+                <div class="checkout-form-section">
+                    <form action="{{ path('order_confirmation') }}" method="GET">
+                        <div class="form-card">
+                            <h2 class="section-title">Customer Information</h2>
+                            
+                            <div class="form-group">
+                                <label for="customer_name">Full Name *</label>
+                                <input type="text" id="customer_name" name="customer_name" value="Jane Doe" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="customer_email">Email Address</label>
+                                <input type="email" id="customer_email" name="customer_email" value="jane@example.com" placeholder="your@email.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address">Pickup / Delivery Address *</label>
+                                <input type="text" id="address" name="address" value="Table 4, Cat Lounge" required>
+                            </div>
+                        </div>
+
+                        <div class="form-card">
+                            <h2 class="section-title">Payment Method</h2>
+                            <div class="payment-options">
+                                <label class="payment-option">
+                                    <input type="radio" name="payment_method" value="Cash on Pickup" checked onclick="document.getElementById('gcash-reference-group').style.display='none'">
+                                    <span class="payment-label">
+                                        <strong>Cash on Pickup</strong>
+                                        <small>Pay with cash upon claiming</small>
+                                    </span>
+                                </label>
+
+                                <label class="payment-option">
+                                    <input type="radio" name="payment_method" value="GCash" id="pm_gcash" onclick="document.getElementById('gcash-reference-group').style.display='block'">
+                                    <span class="payment-label">
+                                        <strong>GCash (Mobile Wallet)</strong>
+                                        <small>Send payment via GCash and enter your transaction reference number</small>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <!-- GCash Reference Number Field (shown when GCash is selected) -->
+                            <div id="gcash-reference-group" class="form-group" style="margin-top: 18px; padding: 14px; background: #faf7f2; border: 1.5px dashed #c9baa9; border-radius: 10px; display: none;">
+                                <label for="reference_number" style="display: flex; align-items: center; justify-content: space-between;">
+                                    <span>GCash Reference Number *</span>
+                                </label>
+                                <input type="text" id="reference_number" name="reference_number" placeholder="12-digit reference number (e.g. 100298451234)" maxlength="12" style="background: #ffffff;">
+                                <small style="color: #6e5c4e; font-size: 12px; margin-top: 6px; display: block;">
+                                    Café GCash: <strong>0967 6767 6767</strong> (Purr & Pour Café). Must be exactly 12 numeric digits from your GCash receipt.
+                                </small>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-place-order">Place Order • $8.00</button>
+                    </form>
+                </div>
+
+                <!-- Right Column: Order Summary -->
+                <div class="checkout-summary-section">
+                    <div class="summary-card">
+                        <h2 class="section-title">Order Summary (2 items)</h2>
+                        
+                        <div class="summary-items">
+                            <div class="summary-item">
+                                <div class="item-img-wrapper">
+                                    <img src="{{ asset('elements/drink_1.png') }}" alt="Latte Coffee">
+                                </div>
+                                <div class="item-info">
+                                    <h4>Latte Coffee</h4>
+                                    <span class="item-qty-price">Qty: 1 × $4.50</span>
+                                </div>
+                                <div class="item-total">
+                                    $4.50
+                                </div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="item-img-wrapper">
+                                    <img src="{{ asset('elements/pastry_1.png') }}" alt="Butter Croissant">
+                                </div>
+                                <div class="item-info">
+                                    <h4>Butter Croissant</h4>
+                                    <span class="item-qty-price">Qty: 1 × $3.50</span>
+                                </div>
+                                <div class="item-total">
+                                    $3.50
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="summary-totals">
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span>$8.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Pickup Fee</span>
+                                <span>$0.00</span>
+                            </div>
+                            <div class="summary-row total-row">
+                                <span>Grand Total</span>
+                                <span>$8.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'navigation/footer.html.twig' %}
+{% endblock %}

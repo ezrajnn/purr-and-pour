@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Your Cart | Purr & Pour Café{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('loginHeader.css') }}">
+    <link rel="stylesheet" href="{{ asset('cart.css') }}">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% include 'navigation/header.html.twig' %}
+
+    <main class="cart-page">
+        <div class="cart-container">
+            <div class="cart-header">
+                <h1>Shopping Cart</h1>
+                <a href="{{ path('menu') }}">← Back to Menu</a>
+            </div>
+
+            <!-- Cart table displaying products, price, and quantity -->
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="item-details">
+                                <h4>Latte Coffee</h4>
+                                <span class="product-id-badge">ID: 1</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="cart-item-price">$4.50</span>
+                        </td>
+                        <td>
+                            <div class="qty-controls">
+                                <button type="button" class="qty-btn" title="Decrease">−</button>
+                                <span class="qty-val">1</span>
+                                <button type="button" class="qty-btn" title="Increase">+</button>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="cart-item-total"><strong>$4.50</strong></span>
+                        </td>
+                        <td>
+                            <button type="button" class="remove-btn">Remove</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="item-details">
+                                <h4>Butter Croissant</h4>
+                                <span class="product-id-badge">ID: 13</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="cart-item-price">$3.50</span>
+                        </td>
+                        <td>
+                            <div class="qty-controls">
+                                <button type="button" class="qty-btn" title="Decrease">−</button>
+                                <span class="qty-val">1</span>
+                                <button type="button" class="qty-btn" title="Increase">+</button>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="cart-item-total"><strong>$3.50</strong></span>
+                        </td>
+                        <td>
+                            <button type="button" class="remove-btn">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="cart-footer">
+                <div class="cart-summary">
+                    <div>Total items: <strong>2</strong></div>
+                    <div class="cart-total-amount">Order Total: <strong>$8.00</strong></div>
+                </div>
+                <div class="cart-actions">
+                    <a href="{{ path('menu') }}" class="btn-secondary">Add More Items</a>
+                    <a href="{{ path('checkout') }}" class="btn-primary">Proceed to Checkout →</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'navigation/footer.html.twig' %}
+{% endblock %}

@@ -1,0 +1,38 @@
+<footer class="footer">
+    <!-- Brand -->
+    <div class="footer-brand">
+        <img src="{{ asset('elements/footer_logo.png') }}" alt="Purr & Pour Cafe">
+        <p>0967 6767 6767</p>
+        <p>purr&pour@gmail.com</p>
+        <div class="socials">
+            <a href="#">f</a>
+            <a href="#">◎</a>
+        </div>
+    </div>
+
+    <!-- Menu -->
+    <div class="footer-column">
+        <h3>Menu</h3>
+        <a href="{{ path('menu') }}">Drinks</a>
+        <a href="{{ path('menu') }}">Meals</a>
+        <a href="{{ path('menu') }}">Pastries</a>
+        <a href="{{ path('menu') }}">Bestsellers</a>
+    </div>
+
+    <!-- Quicklinks -->
+    <div class="footer-column">
+        <h3>Quicklinks</h3>
+        <a href="{{ path('our_story') }}">About Us</a>
+        <a href="{{ path('home') }}">Home</a>
+        <a href="{{ path('menu') }}">Menu</a>
+        <a href="{{ path('home') }}#cats">Cat Profile</a>
+        <a href="{{ path('cat_lounge') }}">Cat Lounge</a>
+    </div>
+
+    <!-- App -->
+    <div class="footer-column app-column">
+        <h3>Get the App</h3>
+        <img src="{{ asset('elements/google_logo.png') }}" alt="Google Play">
+        <img src="{{ asset('elements/apple_logo.png') }}" alt="App Store">
+    </div>
+</footer>

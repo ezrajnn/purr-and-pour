@@ -1,0 +1,790 @@
+/* ========================================================
+   Sidebar Overlay & Container (Light Beige / Warm Gray Theme)
+   ======================================================== */
+.app-sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(43, 33, 23, 0.45);
+    backdrop-filter: blur(2px);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.app-sidebar-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+body.sidebar-locked {
+    overflow: hidden;
+}
+
+.app-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 430px;
+    max-width: 94vw;
+    height: 100vh;
+    max-height: 100vh;
+    background-color: #FAF8F5; /* Warm Beige / Off-White */
+    color: #4a3b32;
+    z-index: 9999;
+    box-shadow: -8px 0 35px rgba(50, 35, 20, 0.18);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+    border-left: 1px solid #EBE4DC;
+    overflow: hidden;
+}
+
+.app-sidebar.is-open {
+    transform: translateX(0);
+}
+
+/* Very Top Logo Banner - Zoomed in, Centered, No Shadow */
+.sidebar-top-branding {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 20px 12px 20px;
+    background-color: transparent;
+    border-bottom: 1px solid #EAE1D7;
+    flex-shrink: 0;
+}
+
+.sidebar-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.sidebar-header-custom-logo {
+    height: 165px;
+    width: auto;
+    max-width: 85%;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    filter: none !important;
+    box-shadow: none !important;
+}
+
+.sidebar-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #7d6554;
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    z-index: 2;
+}
+
+.sidebar-close-btn:hover {
+    color: #3e2e22;
+    background-color: #e5dacd;
+}
+
+/* Scrollable Container */
+.sidebar-scrollable-content {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 16px 18px 24px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+}
+
+.sidebar-scrollable-content::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar-scrollable-content::-webkit-scrollbar-track {
+    background: #f1eae2;
+}
+.sidebar-scrollable-content::-webkit-scrollbar-thumb {
+    background: #d4c4b5;
+    border-radius: 4px;
+}
+
+/* Toast Message */
+.sidebar-status-toast {
+    display: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.sidebar-status-toast.is-visible {
+    display: block;
+    animation: fadeInToast 0.3s ease;
+}
+
+@keyframes fadeInToast {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.toast-success {
+    background-color: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.toast-error {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* 1. Member Profile Banner */
+.sidebar-profile-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #E8E1D8;
+    box-shadow: 0 2px 8px rgba(60, 45, 30, 0.05);
+    flex-shrink: 0;
+}
+
+.sidebar-avatar-wrapper {
+    position: relative;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: #EFE8DE;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.sidebar-avatar-placeholder {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: #8c6d48;
+}
+
+.sidebar-profile-details {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.sidebar-display-name {
+    margin: 0;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: #3b2c1d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-email {
+    margin: 0;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 12px;
+    color: #7b6d61;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-badge-row {
+    margin-top: 4px;
+}
+
+.sidebar-member-badge {
+    display: inline-block;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 12px;
+}
+
+.badge-member {
+    background-color: #F5EAE0;
+    color: #8c5d2b;
+    border: 1px solid #E5D3C2;
+}
+
+.badge-admin {
+    background-color: #E7DECE;
+    color: #4b3826;
+    border: 1px solid #D5C7B3;
+}
+
+/* ========================================================
+   Accordion System: One-line Buttons that Expand Fully
+   ======================================================== */
+.sidebar-accordion-item {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #E8E1D8;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(60, 45, 30, 0.03);
+    transition: border-color 0.25s, box-shadow 0.25s;
+    flex-shrink: 0;
+}
+
+.sidebar-accordion-item.is-open {
+    border-color: #d8c2ad;
+    box-shadow: 0 4px 12px rgba(60, 45, 30, 0.08);
+}
+
+.sidebar-accordion-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 16px;
+    background: #ffffff;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s;
+    font-family: inherit;
+}
+
+.sidebar-accordion-header:hover {
+    background-color: #faf5ee;
+}
+
+.accordion-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.card-icon {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+    display: inline-block;
+}
+
+.accordion-title-text {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #413225;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sidebar-count-pill {
+    background-color: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 1px 7px;
+    border-radius: 10px;
+}
+
+.accordion-chevron {
+    font-size: 12px;
+    font-weight: bold;
+    color: #a49182;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s;
+    transform: rotate(90deg);
+}
+
+.sidebar-accordion-item.is-open .accordion-chevron {
+    transform: rotate(-90deg);
+    color: #D79A63;
+}
+
+.sidebar-accordion-content {
+    display: none;
+    background-color: #FAF8F5;
+}
+
+.sidebar-accordion-item.is-open .sidebar-accordion-content {
+    display: block;
+}
+
+.accordion-inner {
+    padding: 14px 16px 16px 16px;
+    border-top: 1px solid #ECE4DA;
+}
+
+.sidebar-card-desc {
+    margin: 0 0 10px 0;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 12px;
+    color: #7b6d61;
+    line-height: 1.4;
+}
+
+/* Form inputs & buttons */
+.sidebar-input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.sidebar-input {
+    flex: 1;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 13px;
+    padding: 8px 12px;
+    border: 1px solid #dcd3c8;
+    background-color: #ffffff;
+    border-radius: 6px;
+    color: #3b2c1d;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.sidebar-input:focus {
+    border-color: #D79A63;
+    box-shadow: 0 0 0 2px rgba(215, 154, 99, 0.2);
+}
+
+.sidebar-input-hint {
+    display: block;
+    margin-top: 6px;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 11px;
+    color: #8c7d71;
+}
+
+.sidebar-btn {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 7px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.sidebar-btn-primary {
+    background-color: #D79A63;
+    color: #ffffff;
+}
+
+.sidebar-btn-primary:hover:not(:disabled) {
+    background-color: #c4874f;
+}
+
+.sidebar-btn-primary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.sidebar-btn-outline {
+    background-color: #ffffff;
+    border: 1px solid #d4c7b8;
+    color: #554436;
+}
+
+.sidebar-btn-outline:hover {
+    background-color: #f5ede4;
+}
+
+.sidebar-avatar-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.sidebar-selected-file {
+    margin-top: 6px;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 11px;
+    color: #8c7b6c;
+    word-break: break-all;
+}
+
+/* Toggles */
+.sidebar-toggles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sidebar-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.toggle-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.toggle-title {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #3b2c1d;
+}
+
+.toggle-desc {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 11px;
+    color: #7b6d61;
+}
+
+/* Switch UI */
+.switch-toggle {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.switch-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #d1c7bc;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 24px;
+}
+
+.switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.switch-toggle input:checked + .switch-slider {
+    background-color: #648e58;
+}
+
+.switch-toggle input:checked + .switch-slider:before {
+    transform: translateX(18px);
+}
+
+/* Order History inside Accordion */
+.sidebar-orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar-empty-state {
+    text-align: center;
+    padding: 18px 10px;
+    color: #7c6c5f;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 12.5px;
+}
+
+.sidebar-empty-state span {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.sidebar-order-card {
+    background-color: #ffffff;
+    border: 1px solid #EBE4DA;
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.sidebar-order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-order-header strong {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 12.5px;
+    color: #3b2c1d;
+}
+
+.customer-tag {
+    color: #8c6d48;
+    font-weight: 700;
+}
+
+.order-badge {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 10px;
+    text-transform: uppercase;
+}
+
+.order-status-approved {
+    background-color: #ecfdf5;
+    color: #065f46;
+}
+
+.order-status-pending {
+    background-color: #fffbeb;
+    color: #b45309;
+}
+
+.order-status-cancelled {
+    background-color: #fef2f2;
+    color: #991b1b;
+}
+
+.sidebar-order-items {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 11.5px;
+    color: #6a5a4d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-order-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 11px;
+    color: #8c7b6c;
+    font-weight: 700;
+}
+
+/* Admin Instant Action Buttons */
+.sidebar-admin-order-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed #efe8df;
+}
+
+.btn-sidebar-approve {
+    flex: 1;
+    background-color: #22c55e;
+    color: #ffffff;
+    border: none;
+    padding: 6px 8px;
+    border-radius: 5px;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-sidebar-approve:hover {
+    background-color: #16a34a;
+}
+
+.btn-sidebar-reject {
+    background-color: #f1f5f9;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-sidebar-reject:hover {
+    background-color: #fee2e2;
+}
+
+/* Support Links */
+.sidebar-support-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.support-link-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #ebe3d9;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s;
+}
+
+.support-link-item:hover {
+    background-color: #f2eae0;
+}
+
+.support-icon {
+    font-size: 18px;
+}
+
+.support-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.support-text strong {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #413225;
+}
+
+.support-text span {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 11px;
+    color: #7b6d61;
+}
+
+.support-hours {
+    margin-top: 4px;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 11px;
+    color: #8c7b6c;
+    background-color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px dashed #dcd3c7;
+}
+
+/* Admin Support & Account Management Panel inside Sidebar */
+.admin-support-subheading {
+    margin: 0 0 6px 0;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: #5b4530;
+}
+
+.sidebar-admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-form-label {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #554436;
+}
+
+.sidebar-divider {
+    border: none;
+    border-top: 1px dashed #dcd1c4;
+    margin: 14px 0;
+}
+
+.sidebar-small-link {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 11.5px;
+    color: #8c6d48;
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+/* ========================================================
+   Sidebar Footer - Log out Button Centered
+   ======================================================== */
+.sidebar-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 20px;
+    border-top: 1px solid #EAE1D7;
+    background-color: #FAF8F5;
+    flex-shrink: 0;
+}
+
+.sidebar-logout-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 160px;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #b91c1c;
+    background-color: #fee2e2;
+    padding: 9px 24px;
+    border-radius: 20px;
+    border: 1px solid #fca5a5;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(185, 28, 28, 0.1);
+}
+
+.sidebar-logout-btn:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+    border-color: #ef4444;
+    box-shadow: 0 3px 8px rgba(239, 68, 68, 0.25);
+}

@@ -1,0 +1,119 @@
+@font-face {
+    font-family: "Source Sans 3";
+    src: url("../fonts/SourceSans3-Regular.ttf") format("truetype");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "Source Sans 3";
+    src: url("../fonts/SourceSans3-Black.ttf") format("truetype");
+    font-weight: 900;
+}
+
+@font-face {
+    font-family: "Source Sans 3 Black";
+    src: url("../fonts/SourceSans3-Black.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../fonts/CormoratGaramond.ttf") format("truetype");
+    font-weight: 400;
+}
+
+body.cat-lounge-body,
+.cat-lounge-wrapper {
+    background-color: #ffffff;
+    width: 100%;
+}
+
+.cat-lounge-page {
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 90px 20px 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    background-color: #ffffff;
+}
+
+.lounge-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 90px;
+}
+
+.lounge-text {
+    flex: 1;
+    max-width: 500px;
+}
+
+.lounge-text h2 {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: #5b4530;
+    margin-bottom: 20px;
+}
+
+.lounge-text p {
+    font-family: "Cormorant Garamond", serif, Georgia;
+    font-size: 18px;
+    line-height: 1.5;
+    color: #5b4530;
+    margin-bottom: 16px;
+}
+
+.lounge-image-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 450px;
+    display: flex;
+    justify-content: center;
+}
+
+.lounge-image-wrapper img {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    height: 300px;
+    border-radius: 4px;
+    object-fit: cover;
+    display: block;
+}
+
+.image-bg {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-color: #edc9aa;
+    border-radius: 4px;
+}
+
+.image-right .image-bg {
+    top: -20px;
+    right: -20px;
+}
+
+.image-left .image-bg {
+    top: -20px;
+    left: -20px;
+}
+
+@media (max-width: 768px) {
+    .lounge-row,
+    .lounge-row.reverse-row {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .lounge-text,
+    .lounge-image-wrapper {
+        max-width: 100%;
+    }
+}

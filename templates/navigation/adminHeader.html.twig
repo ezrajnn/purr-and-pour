@@ -1,0 +1,58 @@
+<header class="login-header">
+    <nav class="login-navbar">
+
+        <div class="login-header-logo">
+            <a href="{{ path('home') }}">
+                <img src="{{ asset('elements/orangePaw.png') }}" alt="Purr & Pour Logo">
+            </a>
+        </div>
+
+        <ul class="login-header-links">
+            <li>
+                <a href="{{ path('home') }}">Home</a>
+            </li>
+
+            <li>
+                <a href="{{ path('menu') }}">Menu</a>
+            </li>
+
+            <li>
+                <a href="{{ path('cat_lounge') }}">Cat Lounge</a>
+            </li>
+
+            <li>
+                <a href="{{ path('our_story') }}">Our Story</a>
+            </li>
+
+            <li>
+                <a href="{{ path('cart') }}" class="header-cart-link">
+                    Cart
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ path('account') }}">My Account & History</a>
+            </li>
+        </ul>
+
+        <div class="hero-buttons">
+            <a href="{{ path('account') }}" class="header-login" title="View My Account & Transaction History">
+                <svg class="user-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="14" />
+                    <circle cx="16" cy="11" r="5" />
+                    <path d="M7.5 27C8.5 21.5 11.5 18.5 16 18.5C20.5 18.5 23.5 21.5 24.5 27" />
+                </svg>
+                <span class="username">Admin</span>
+            </a>
+
+            <a href="{{ path('admin_dashboard') }}" class="header-register header-admin">
+                ⚙ Admin
+            </a>
+
+            <a href="{{ path('login') }}" class="header-register">
+                Log out
+            </a>
+        </div>
+
+    </nav>
+</header>

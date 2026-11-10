@@ -1,0 +1,1444 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('admin.css') }}">
+{% endblock %}
+
+{% block body %}
+
+{% include 'navigation/adminHeader.html.twig' %}
+
+
+{% set all_products = all_products|default([]) %}
+{% set all_orders = all_orders|default([]) %}
+{% set all_users = all_users|default([]) %}
+{% set edit_product = edit_product|default(null) %}
+{% set edit_user = edit_user|default(null) %}
+{% set notice = notice|default(null) %}
+{% set error = error|default(null) %}
+
+{% set total_inventory_items = total_inventory_items|default(0) %}
+{% set total_stock_count = total_stock_count|default(0) %}
+{% set total_out_of_stock = total_out_of_stock|default(0) %}
+{% set total_users_count = total_users_count|default(0) %}
+{% set admin_count = admin_count|default(0) %}
+{% set customer_count = customer_count|default(0) %}
+
+{% set orders_summary = orders_summary|default({
+    total_orders: 0,
+    total_sales: 0
+}) %}
+
+<main class="admin-page">
+
+    <!-- ADMIN HEADER -->
+    <div class="admin-header">
+
+        <div>
+            <h1>Café Administrator Dashboard</h1>
+
+            <p class="admin-subtitle">
+                Manage stock levels, add products, and update café menu items
+            </p>
+        </div>
+
+        <div class="admin-nav-links">
+
+            <a href="#accounts-section"
+               class="admin-link-live"
+               style="background:#e4d7c7; padding:6px 12px; border-radius:6px;">
+                Registered Accounts
+            </a>
+
+            <a href="#orders-section"
+               class="admin-link-live"
+               style="background:#e4d7c7; padding:6px 12px; border-radius:6px;">
+                Orders
+            </a>
+
+            <a href="{{ path('menu') }}"
+               class="admin-link-live">
+                ← View Menu
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+    <div class="stats-grid"
+         style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+
+        <div class="stat-card">
+            <span>Total Products</span>
+
+            <h3>
+                {{ total_inventory_items }}
+            </h3>
+        </div>
+
+
+        <div class="stat-card">
+            <span>Total In-Stock Units</span>
+
+            <h3>
+                {{ total_stock_count }}
+            </h3>
+        </div>
+
+
+        <div class="stat-card">
+
+            <span
+                {% if total_out_of_stock > 0 %}
+                    style="color:#c53030; font-weight:bold;"
+                {% endif %}
+            >
+                Out of Stock Items
+            </span>
+
+            <h3
+                {% if total_out_of_stock > 0 %}
+                    style="color:#c53030;"
+                {% endif %}
+            >
+                {{ total_out_of_stock }}
+            </h3>
+
+        </div>
+
+
+        <div class="stat-card">
+            <span>Total Placed Orders</span>
+
+            <h3>
+                {{ orders_summary.total_orders|default(0) }}
+            </h3>
+        </div>
+
+
+        <div class="stat-card">
+            <span>Gross Recorded Sales</span>
+
+            <h3>
+                ${{ orders_summary.total_sales|default(0)|number_format(2) }}
+            </h3>
+        </div>
+
+
+        <div class="stat-card">
+
+            <span>Registered Accounts</span>
+
+            <h3>
+
+                {{ total_users_count }}
+
+                <small style="font-size:12px; font-weight:normal; color:#8c7b6d;">
+                    ({{ admin_count }} Admin, {{ customer_count }} Customer)
+                </small>
+
+            </h3>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUCCESS MESSAGE -->
+    {% if notice %}
+        <div class="alert-box alert-success">
+            {{ notice }}
+        </div>
+    {% endif %}
+
+
+    <!-- ERROR MESSAGE -->
+    {% if error %}
+        <div class="alert-box alert-error">
+            {{ error }}
+        </div>
+    {% endif %}
+
+
+    <!-- ADMIN GRID -->
+    <div class="admin-grid">
+
+
+        <!-- ADD / EDIT PRODUCT -->
+        <div class="card">
+
+            <h2>
+                {% if edit_product %}
+                    ✏ Edit Product #{{ edit_product.id }}
+                {% else %}
+                    Add New Product
+                {% endif %}
+            </h2>
+
+
+            <form action="#" method="POST">
+
+                <input type="hidden"
+                       name="action"
+                       value="{% if edit_product %}update_product{% else %}create_product{% endif %}">
+
+
+                {% if edit_product %}
+
+                    <input type="hidden"
+                           name="product_id"
+                           value="{{ edit_product.id }}">
+
+                {% endif %}
+
+
+                <!-- PRODUCT NAME -->
+                <div class="form-group">
+
+                    <label for="name">
+                        Product Name *
+                    </label>
+
+                    <input type="text"
+                           id="name"
+                           name="name"
+                           required
+                           value="{{ edit_product.name|default('') }}"
+                           placeholder="e.g. Caramel Macchiato">
+
+                </div>
+
+
+                <!-- CATEGORY -->
+                <div class="form-group">
+
+                    <label for="category">
+                        Category *
+                    </label>
+
+                    <select id="category"
+                            name="category">
+
+                        {% set categories = [
+                            'Hot Drinks',
+                            'Cold Drinks',
+                            'Pastries & Desserts',
+                            'Rice Meals',
+                            'Pasta & Mains'
+                        ] %}
+
+                        {% set current_cat = edit_product.category|default('Hot Drinks') %}
+
+                        {% for cat in categories %}
+
+                            <option value="{{ cat }}"
+                                {% if current_cat == cat %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ cat }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- PRICE AND STOCK -->
+                <div class="form-row">
+
+
+                    <div class="form-group">
+
+                        <label for="price">
+                            Price ($) *
+                        </label>
+
+                        <input type="number"
+                               step="0.25"
+                               id="price"
+                               name="price"
+                               required
+                               value="{{ edit_product.price|default('5.00') }}">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="stock">
+                            Stock Quantity *
+                        </label>
+
+                        <input type="number"
+                               id="stock"
+                               name="stock"
+                               required
+                               value="{{ edit_product.stock|default('20') }}">
+
+                    </div>
+
+                </div>
+
+
+                <!-- IMAGE -->
+                <div class="form-group">
+
+                    <label for="image">
+                        Image Asset File *
+                    </label>
+
+                    {% set images = [
+                        'drink_1.png',
+                        'drink_2.png',
+                        'drink_3.png',
+                        'drink_4.png',
+                        'drink_5.png',
+                        'drink_6.png',
+                        'drink_7.png',
+                        'drink_8.png',
+                        'drink_9.png',
+                        'drink_10.png',
+                        'drink_11.png',
+                        'drink_12.png',
+                        'pastry_1.png',
+                        'pastry_2.png',
+                        'pastry_3.png',
+                        'pastry_4.png',
+                        'pastry_5.png',
+                        'pastry_6.png',
+                        'meal_1.png',
+                        'meal_2.png',
+                        'meal_4.png',
+                        'meal_5.png',
+                        'meal_6.png'
+                    ] %}
+
+                    {% set current_image = edit_product.image|default('drink_1.png') %}
+
+                    <select id="image"
+                            name="image">
+
+                        {% for img in images %}
+
+                            <option value="{{ img }}"
+                                {% if current_image == img %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ img }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+                <div class="form-group">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <textarea id="description"
+                              name="description"
+                              rows="2"
+                              placeholder="Brief flavor profile...">{{ edit_product.description|default('') }}</textarea>
+
+                </div>
+
+
+                <!-- SUBMIT -->
+                <button type="submit"
+                        class="btn-submit">
+
+                    {% if edit_product %}
+                        Save Changes
+                    {% else %}
+                        Create Product
+                    {% endif %}
+
+                </button>
+
+
+                {% if edit_product %}
+
+                    <a href="#"
+                       class="btn-cancel">
+                        Cancel Edit
+                    </a>
+
+                {% endif %}
+
+            </form>
+
+        </div>
+
+
+
+        <!-- LIVE INVENTORY -->
+        <div class="card">
+
+            <h2>
+                Live Inventory & Stock Controller
+            </h2>
+
+
+            <div style="overflow-x: auto;">
+
+                <table class="inventory-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Img</th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Current Stock</th>
+                            <th>Quick Add Stock</th>
+                            <th>Actions</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for prod in all_products %}
+
+                            {% set stk = prod.stock|default(0) %}
+
+                            {% if stk > 10 %}
+                                {% set badge_class = 'stock-good' %}
+                            {% elseif stk > 0 %}
+                                {% set badge_class = 'stock-low' %}
+                            {% else %}
+                                {% set badge_class = 'stock-out' %}
+                            {% endif %}
+
+                            {% set is_out = stk <= 0 %}
+
+
+                            <tr
+                                {% if is_out %}
+                                    style="background-color: #fff5f5;"
+                                {% endif %}
+                            >
+
+                                <!-- IMAGE -->
+                                <td>
+
+                                    <img src="{{ asset('elements/' ~ prod.image) }}"
+                                         class="prod-thumb"
+                                         alt="{{ prod.name|default('Product') }}">
+
+                                </td>
+
+
+                                <!-- ID -->
+                                <td>
+                                    <strong>
+                                        #{{ prod.id }}
+                                    </strong>
+                                </td>
+
+
+                                <!-- NAME -->
+                                <td>
+
+                                    <strong>
+                                        {{ prod.name }}
+                                    </strong>
+
+
+                                    {% if is_out %}
+
+                                        <span style="
+                                            display:inline-block;
+                                            margin-left:6px;
+                                            font-size:10px;
+                                            font-weight:800;
+                                            background:#fee2e2;
+                                            color:#991b1b;
+                                            padding:2px 6px;
+                                            border-radius:4px;
+                                            border:1px solid #fca5a5;
+                                        ">
+                                            OUT OF STOCK
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- CATEGORY -->
+                                <td>
+                                    {{ prod.category }}
+                                </td>
+
+
+                                <!-- PRICE -->
+                                <td>
+                                    ${{ prod.price|default(0)|number_format(2) }}
+                                </td>
+
+
+                                <!-- STOCK -->
+                                <td>
+
+                                    <span class="stock-badge {{ badge_class }}">
+
+                                        {% if is_out %}
+                                            0 units (Out of Stock)
+                                        {% else %}
+                                            {{ stk }} units
+                                        {% endif %}
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- QUICK STOCK -->
+                                <td>
+
+                                    <form action="#"
+                                          method="POST"
+                                          class="quick-stock-form"
+                                          style="display:flex; align-items:center; gap:3px;">
+
+                                        <input type="hidden"
+                                               name="action"
+                                               value="adjust_stock">
+
+                                        <input type="hidden"
+                                               name="product_id"
+                                               value="{{ prod.id }}">
+
+                                        <input type="number"
+                                               name="qty"
+                                               value="5"
+                                               min="1"
+                                               step="1"
+                                               style="
+                                                   width:42px;
+                                                   padding:4px;
+                                                   font-size:12px;
+                                                   border:1px solid #dcd4cb;
+                                                   border-radius:4px;
+                                                   text-align:center;
+                                               ">
+
+
+                                        <button type="submit"
+                                                name="adjust_type"
+                                                value="add"
+                                                class="btn-stock-add"
+                                                style="background:#48bb78;"
+                                                title="Add to stock">
+
+                                            +Add
+
+                                        </button>
+
+
+                                        <button type="submit"
+                                                name="adjust_type"
+                                                value="deduct"
+                                                class="btn-stock-add"
+                                                style="background:#e53e3e;"
+                                                title="Deduct from stock">
+
+                                            Deduct
+
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+                                <td class="action-links">
+
+                                    <a href="#"
+                                       class="action-edit">
+                                        Edit
+                                    </a>
+
+                                    <a href="#"
+                                       class="action-delete">
+                                        Delete
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+
+                        {% else %}
+
+                            <tr>
+
+                                <td colspan="8"
+                                    style="text-align:center; padding:20px;">
+
+                                    No products available.
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- CUSTOMER ORDERS -->
+    <div class="card"
+         id="orders-section"
+         style="margin-top:30px;">
+
+        <h2>
+            Customer Orders & Approval Management
+        </h2>
+
+
+        {% if all_orders is empty %}
+
+            <p style="color:#8c7b6d; padding:15px 0;">
+                No customer orders have been placed yet.
+            </p>
+
+        {% else %}
+
+            <div style="overflow-x:auto;">
+
+                <table class="inventory-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Order #</th>
+                            <th>Customer</th>
+                            <th>Items Ordered</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action / Approval</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for ord in all_orders %}
+
+                            {% set st = ord.status|default('Pending') %}
+
+
+                            {% if st == 'Approved' %}
+
+                                {% set status_label = 'Approved' %}
+                                {% set badge_color = 'background:#def7ec; color:#03543f; border:1px solid #84e1bc;' %}
+
+                            {% elseif st == 'Cancelled' %}
+
+                                {% set status_label = 'Cancelled / Rejected' %}
+                                {% set badge_color = 'background:#fee2e2; color:#991b1b; border:1px solid #fca5a5;' %}
+
+                            {% elseif st == 'Completed' %}
+
+                                {% set status_label = 'Completed' %}
+                                {% set badge_color = 'background:#e2e8f0; color:#334155; border:1px solid #cbd5e1;' %}
+
+                            {% else %}
+
+                                {% set status_label = 'Pending Approval' %}
+                                {% set badge_color = 'background:#fef08a; color:#854d0e; border:1px solid #fde047;' %}
+
+                            {% endif %}
+
+
+                            <tr>
+
+                                <!-- ORDER NUMBER -->
+                                <td>
+                                    <strong>
+                                        #{{ '%05d'|format(ord.id|default(0)) }}
+                                    </strong>
+                                </td>
+
+
+                                <!-- CUSTOMER -->
+                                <td>
+
+                                    <strong>
+                                        {{ ord.customer_name|default('Customer') }}
+                                    </strong>
+
+                                    <br>
+
+                                    <small style="color:#8c7b6d;">
+                                        {{ ord.customer_email|default('') }}
+                                    </small>
+
+
+                                    {% if ord.address|default('') %}
+
+                                        <div style="
+                                            font-size:11px;
+                                            color:#6b553e;
+                                            background:#faf4ed;
+                                            padding:4px 6px;
+                                            border-radius:4px;
+                                            margin-top:4px;
+                                            max-width:220px;
+                                            line-height:1.3;
+                                            border:1px solid #eee1d3;
+                                        ">
+                                            {{ ord.address }}
+                                        </div>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- ITEMS -->
+                                <td>
+
+                                    <div style="
+                                        max-width:250px;
+                                        font-size:12px;
+                                        color:#555;
+                                    ">
+                                        {{ ord.items_summary|default('None') }}
+                                    </div>
+
+                                </td>
+
+
+                                <!-- TOTAL -->
+                                <td>
+
+                                    <strong>
+                                        ${{ ord.total_amount|default(0)|number_format(2) }}
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- PAYMENT -->
+                                <td>
+
+                                    <div style="font-weight:600;">
+                                        {{ ord.payment_method|default('N/A') }}
+                                    </div>
+
+
+                                    {% if ord.reference_number|default('') %}
+
+                                        <div style="
+                                            font-size:11px;
+                                            color:#0369a1;
+                                            background:#e0f2fe;
+                                            padding:2px 6px;
+                                            border-radius:4px;
+                                            margin-top:3px;
+                                            font-family:monospace;
+                                            display:inline-block;
+                                        ">
+
+                                            Ref:
+                                            {{ ord.reference_number }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- DATE -->
+                                <td>
+
+                                    {% if ord.created_at|default(null) %}
+
+                                        <small>
+                                            {{ ord.created_at|date('M d, h:i A') }}
+                                        </small>
+
+                                    {% else %}
+
+                                        <small>
+                                            N/A
+                                        </small>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- STATUS -->
+                                <td>
+
+                                    <span class="stock-badge"
+                                          style="{{ badge_color }}">
+
+                                        {{ status_label }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ACTION -->
+                                <td>
+
+                                    <form action="#"
+                                          method="POST"
+                                          style="
+                                              display:flex;
+                                              gap:5px;
+                                              align-items:center;
+                                              flex-wrap:wrap;
+                                          ">
+
+                                        <input type="hidden"
+                                               name="action"
+                                               value="update_order_status">
+
+                                        <input type="hidden"
+                                               name="order_id"
+                                               value="{{ ord.id|default(0) }}">
+
+
+                                        {% if st != 'Approved' and st != 'Completed' %}
+
+                                            <button type="submit"
+                                                    name="status"
+                                                    value="Approved"
+                                                    class="btn-stock-add"
+                                                    style="background:#38a169; padding:6px 10px;"
+                                                    title="Approve this order">
+
+                                                Approve
+
+                                            </button>
+
+                                        {% endif %}
+
+
+                                        {% if st != 'Cancelled' %}
+
+                                            <button type="submit"
+                                                    name="status"
+                                                    value="Cancelled"
+                                                    class="btn-stock-add"
+                                                    style="background:#e53e3e; padding:6px 10px;"
+                                                    title="Reject or cancel order">
+
+                                                Reject
+
+                                            </button>
+
+                                        {% endif %}
+
+
+                                        {% if st == 'Approved' %}
+
+                                            <button type="submit"
+                                                    name="status"
+                                                    value="Completed"
+                                                    class="btn-stock-add"
+                                                    style="background:#4a5568; padding:6px 10px;"
+                                                    title="Mark as completed/picked up">
+
+                                                Done
+
+                                            </button>
+
+                                        {% endif %}
+
+
+                                        {% if st == 'Cancelled' %}
+
+                                            <button type="submit"
+                                                    name="status"
+                                                    value="Pending"
+                                                    class="btn-stock-add"
+                                                    style="background:#d97706; padding:6px 10px;"
+                                                    title="Reopen as pending">
+
+                                                Reset
+
+                                            </button>
+
+                                        {% endif %}
+
+                                    </form>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- REGISTERED ACCOUNTS -->
+    <div class="card"
+         id="accounts-section"
+         style="margin-top:30px;">
+
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-bottom:15px;
+        ">
+
+
+            <div>
+
+                <h2>
+                    Registered Accounts
+                </h2>
+
+                <p style="
+                    color:#8c7b6d;
+                    font-size:13px;
+                    margin-top:3px;
+                ">
+                    View and manage users, change account roles,
+                    edit details, or remove accounts.
+                </p>
+
+            </div>
+
+
+            {% if edit_user %}
+
+                <a href="#accounts-section"
+                   style="
+                       font-size:13px;
+                       color:#785338;
+                       font-weight:bold;
+                       text-decoration:underline;
+                   ">
+
+                    + Cancel Editing User
+
+                </a>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- EDIT USER -->
+        {% if edit_user %}
+
+            <div style="
+                background:#faf6f0;
+                border:1px solid #e2d3c2;
+                padding:20px;
+                border-radius:8px;
+                margin-bottom:25px;
+            ">
+
+
+                <h3 style="
+                    font-size:16px;
+                    color:#5b4530;
+                    margin-bottom:12px;
+                ">
+
+                    ✏ Edit Account:
+                    {{ edit_user.name }}
+                    (ID #{{ edit_user.id }})
+
+                </h3>
+
+
+                <form action="#accounts-section"
+                      method="POST"
+                      style="
+                          display:grid;
+                          grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+                          gap:15px;
+                          align-items:end;
+                      ">
+
+
+                    <input type="hidden"
+                           name="action"
+                           value="update_user">
+
+
+                    <input type="hidden"
+                           name="user_id"
+                           value="{{ edit_user.id }}">
+
+
+                    <!-- NAME -->
+                    <div class="form-group"
+                         style="margin-bottom:0;">
+
+                        <label for="edit_user_name"
+                               style="
+                                   font-size:12px;
+                                   font-weight:bold;
+                                   color:#6b553e;
+                               ">
+
+                            Full Name *
+
+                        </label>
+
+
+                        <input type="text"
+                               id="edit_user_name"
+                               name="name"
+                               required
+                               value="{{ edit_user.name|default('') }}"
+                               style="
+                                   width:100%;
+                                   padding:8px 10px;
+                                   border:1px solid #dcd4cb;
+                                   border-radius:6px;
+                                   font-size:13px;
+                               ">
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+                    <div class="form-group"
+                         style="margin-bottom:0;">
+
+                        <label for="edit_user_email"
+                               style="
+                                   font-size:12px;
+                                   font-weight:bold;
+                                   color:#6b553e;
+                               ">
+
+                            Email Address *
+
+                        </label>
+
+
+                        <input type="email"
+                               id="edit_user_email"
+                               name="email"
+                               required
+                               value="{{ edit_user.email|default('') }}"
+                               style="
+                                   width:100%;
+                                   padding:8px 10px;
+                                   border:1px solid #dcd4cb;
+                                   border-radius:6px;
+                                   font-size:13px;
+                               ">
+
+                    </div>
+
+
+                    <!-- ROLE -->
+                    <div class="form-group"
+                         style="margin-bottom:0;">
+
+                        <label for="edit_user_role"
+                               style="
+                                   font-size:12px;
+                                   font-weight:bold;
+                                   color:#6b553e;
+                               ">
+
+                            Role *
+
+                        </label>
+
+
+                        <select id="edit_user_role"
+                                name="role"
+                                style="
+                                    width:100%;
+                                    padding:8px 10px;
+                                    border:1px solid #dcd4cb;
+                                    border-radius:6px;
+                                    font-size:13px;
+                                ">
+
+                            <option value="customer"
+                                {% if edit_user.role|default('customer') == 'customer' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Customer
+                            </option>
+
+
+                            <option value="admin"
+                                {% if edit_user.role|default('customer') == 'admin' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Admin
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+                    <div class="form-group"
+                         style="margin-bottom:0;">
+
+                        <label for="edit_user_pass"
+                               style="
+                                   font-size:12px;
+                                   font-weight:bold;
+                                   color:#6b553e;
+                               ">
+
+                            New Password
+
+                            <small style="
+                                font-weight:normal;
+                                color:#999;
+                            ">
+                                (optional)
+                            </small>
+
+                        </label>
+
+
+                        <input type="password"
+                               id="edit_user_pass"
+                               name="new_password"
+                               placeholder="Leave blank to keep current"
+                               style="
+                                   width:100%;
+                                   padding:8px 10px;
+                                   border:1px solid #dcd4cb;
+                                   border-radius:6px;
+                                   font-size:13px;
+                               ">
+
+                    </div>
+
+
+                    <!-- BUTTONS -->
+                    <div style="
+                        display:flex;
+                        gap:8px;
+                    ">
+
+                        <button type="submit"
+                                class="btn-stock-add"
+                                style="
+                                    background:#634b35;
+                                    padding:9px 18px;
+                                    font-size:13px;
+                                    border-radius:6px;
+                                ">
+
+                            Save Changes
+
+                        </button>
+
+
+                        <a href="#accounts-section"
+                           class="btn-stock-add"
+                           style="
+                               background:#a89f91;
+                               padding:9px 14px;
+                               font-size:13px;
+                               text-decoration:none;
+                               border-radius:6px;
+                               display:inline-block;
+                           ">
+
+                            Cancel
+
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        {% endif %}
+
+
+
+        <!-- ACCOUNTS TABLE -->
+        {% if all_users is empty %}
+
+            <p style="
+                color:#8c7b6d;
+                padding:15px 0;
+            ">
+                No accounts found.
+            </p>
+
+        {% else %}
+
+            <div style="overflow-x:auto;">
+
+                <table class="inventory-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Total Orders</th>
+                            <th>Actions</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for usr in all_users %}
+
+                            {% set is_self = usr.is_self|default(false) %}
+                            {% set is_admin = usr.role|default('customer') == 'admin' %}
+
+
+                            {% if is_admin %}
+
+                                {% set role_badge = 'background:#e0e7ff; color:#3730a3; border:1px solid #c7d2fe;' %}
+
+                            {% else %}
+
+                                {% set role_badge = 'background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0;' %}
+
+                            {% endif %}
+
+
+                            <tr
+                                {% if is_self %}
+                                    style="background-color:#fdfaf6;"
+                                {% endif %}
+                            >
+
+
+                                <!-- USER ID -->
+                                <td>
+
+                                    <strong>
+                                        #{{ usr.id }}
+                                    </strong>
+
+
+                                    {% if is_self %}
+
+                                        <span style="
+                                            font-size:10px;
+                                            background:#634b35;
+                                            color:#fff;
+                                            padding:2px 5px;
+                                            border-radius:4px;
+                                            margin-left:4px;
+                                        ">
+                                            You
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- NAME -->
+                                <td>
+
+                                    <strong>
+                                        {{ usr.name }}
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- EMAIL -->
+                                <td>
+
+                                    <span style="color:#4a5568;">
+                                        {{ usr.email }}
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ROLE -->
+                                <td>
+
+                                    {% if is_self %}
+
+                                        <span class="stock-badge"
+                                              style="
+                                                  {{ role_badge }}
+                                                  text-transform:uppercase;
+                                                  font-size:11px;
+                                              ">
+
+                                            {{ usr.role }}
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <select name="new_role"
+                                                style="
+                                                    padding:3px 6px;
+                                                    font-size:12px;
+                                                    font-weight:600;
+                                                    border-radius:6px;
+                                                    border:1px solid;
+                                                    cursor:pointer;
+                                                    {{ role_badge }}
+                                                ">
+
+                                            <option value="customer"
+                                                {% if usr.role == 'customer' %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                CUSTOMER
+                                            </option>
+
+
+                                            <option value="admin"
+                                                {% if usr.role == 'admin' %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                ADMIN
+                                            </option>
+
+                                        </select>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- ORDERS -->
+                                <td>
+
+                                    <span style="
+                                        font-size:13px;
+                                        color:#555;
+                                    ">
+
+                                        {{ usr.order_count|default(0) }}
+                                        orders
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+                                <td class="action-links">
+
+                                    <a href="#accounts-section"
+                                       class="action-edit"
+                                       title="Edit this user">
+
+                                        Edit
+
+                                    </a>
+
+
+                                    {% if is_self %}
+
+                                        <span style="
+                                            font-size:12px;
+                                            color:#a0aec0;
+                                            font-style:italic;
+                                            margin-right:8px;
+                                        ">
+
+                                            (Current Account)
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <a href="#accounts-section"
+                                           class="action-delete"
+                                           title="Delete this user">
+
+                                            Delete
+
+                                        </a>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</main>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+<header class="login-header">
+    <nav class="login-navbar">
+
+        <div class="login-header-logo">
+            <a href="{{ path('home') }}">
+                <img src="{{ asset('elements/orangePaw.png') }}" alt="Purr & Pour Logo">
+            </a>
+        </div>
+
+        <ul class="login-header-links">
+            <li>
+                <a href="{{ path('home') }}">Home</a>
+            </li>
+
+            <li>
+                <a href="{{ path('menu') }}">Menu</a>
+            </li>
+
+            <li>
+                <a href="{{ path('cat_lounge') }}">Cat Lounge</a>
+            </li>
+
+            <li>
+                <a href="{{ path('our_story') }}">Our Story</a>
+            </li>
+
+            <li>
+                <a href="{{ path('cart') }}" class="header-cart-link">
+                    Cart <span class="header-cart-badge">2</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ path('account') }}">My Account & History</a>
+            </li>
+        </ul>
+
+        <div class="login-header-account">
+            <a href="{{ path('menu') }}" class="header-register">
+                Order Now ⟶
+            </a>
+            <a href="{{ path('admin_dashboard') }}" class="header-register header-admin" style="margin-left: 8px;">
+                ⚙ Admin
+            </a>
+            <a href="{{ path('login') }}" class="header-login" style="margin-left: 8px;">
+                Log In
+            </a>
+            <button type="button" class="sidebar-toggle-btn" id="sidebarOpenBtn" aria-label="Open Sidebar Menu" style="margin-left: 8px;">
+                <span class="sidebar-toggle-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+                <span class="sidebar-toggle-text">Menu</span>
+            </button>
+        </div>
+
+    </nav>
+</header>
+
+{% include 'navigation/sidebar.html.twig' %}

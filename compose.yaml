@@ -1,25 +1,33 @@
-
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-16}-alpine
+  purr_pour_db:
+    image: mysql:8.0
+    container_name: purr_pour_db
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
-    healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
-      timeout: 5s
-      retries: 5
-      start_period: 60s
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: purr_and_pour
+      MYSQL_USER: purr_user
+      MYSQL_PASSWORD: purr_password
+    ports:
+      - "3307:3306"
     volumes:
-      - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+      - purr_pour_db_data:/var/lib/mysql
+    networks:
+      - purr_pour_network
+
+  purr_pour_phpmyadmin:
+    image: phpmyadmin
+    container_name: purr_pour_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: purr_pour_db
+    ports:
+      - "7777:80"
+    networks:
+      - purr_pour_network
 
 volumes:
-###> doctrine/doctrine-bundle ###
-  database_data:
-###< doctrine/doctrine-bundle ###
+  purr_pour_db_data:
+
+networks:
+  purr_pour_network:

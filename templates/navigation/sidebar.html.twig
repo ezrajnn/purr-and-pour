@@ -1,0 +1,347 @@
+﻿<link rel="stylesheet" href="{{ asset('sidebar.css') }}">
+
+<!-- Sidebar Overlay -->
+<div class="app-sidebar-overlay" id="appSidebarOverlay"></div>
+
+<!-- Slide-out Sidebar -->
+<aside class="app-sidebar" id="appSidebar" aria-label="Member Profile Sidebar">
+    <!-- Centered Zoomed-In Logo Banner -->
+    <div class="sidebar-top-branding">
+        <div class="sidebar-logo-container">
+            <img src="{{ asset('elements/sidebar_logo_cropped.png') }}" alt="Purr & Pour Cat Café Logo" class="sidebar-header-custom-logo">
+        </div>
+        <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close Sidebar">&times;</button>
+    </div>
+
+    <div class="sidebar-scrollable-content">
+        <!-- 1. Member Profile Banner -->
+        <div class="sidebar-profile-banner">
+            <div class="sidebar-avatar-wrapper">
+                <img src="" alt="Avatar" class="sidebar-avatar-img" id="sidebarAvatarImg" style="display:none;">
+                <span class="sidebar-avatar-placeholder" id="sidebarAvatarPlaceholder">M</span>
+            </div>
+            <div class="sidebar-profile-details">
+                <h3 class="sidebar-display-name" id="sidebarDisplayNameDisplay">Member</h3>
+                <p class="sidebar-email">member@purrandpour.cafe</p>
+                <div class="sidebar-badge-row">
+                    <span class="sidebar-member-badge badge-member">
+                        🐾 Café Member
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Alert Toast -->
+        <div class="sidebar-status-toast" id="sidebarStatusToast"></div>
+
+        <!-- Accordion Section 1: Edit Display Name -->
+        <div class="sidebar-accordion-item" id="accEditName">
+            <button type="button" class="sidebar-accordion-header" aria-expanded="false">
+                <div class="accordion-title-group">
+                    <span class="card-icon">✏️</span>
+                    <span class="accordion-title-text">Edit Display Name</span>
+                </div>
+                <span class="accordion-chevron">❯</span>
+            </button>
+            <div class="sidebar-accordion-content">
+                <div class="accordion-inner">
+                    <form id="editDisplayNameForm" onsubmit="event.preventDefault(); window.showSidebarToast && window.showSidebarToast('Display name updated!', true);">
+                        <div class="sidebar-input-group">
+                            <input type="text" id="newDisplayNameInput" class="sidebar-input" value="Member" placeholder="Enter display name" required maxlength="50">
+                            <button type="submit" class="sidebar-btn sidebar-btn-primary" id="saveNameBtn">Save</button>
+                        </div>
+                        <small class="sidebar-input-hint">Changes how your name appears on your profile and receipts.</small>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion Section 2: Change Profile Picture -->
+        <div class="sidebar-accordion-item" id="accChangeAvatar">
+            <button type="button" class="sidebar-accordion-header" aria-expanded="false">
+                <div class="accordion-title-group">
+                    <span class="card-icon">📷</span>
+                    <span class="accordion-title-text">Change Profile Picture</span>
+                </div>
+                <span class="accordion-chevron">❯</span>
+            </button>
+            <div class="sidebar-accordion-content">
+                <div class="accordion-inner">
+                    <p class="sidebar-card-desc">Upload a square photo or avatar image (JPG, PNG, WEBP, max 4MB).</p>
+                    <div class="sidebar-avatar-actions">
+                        <label for="avatarFileInput" class="sidebar-btn sidebar-btn-outline" style="cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                            <span>Choose Photo</span>
+                            <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+                        </label>
+                        <button type="button" class="sidebar-btn sidebar-btn-primary" id="uploadAvatarBtn" disabled>Upload Photo</button>
+                    </div>
+                    <div id="avatarFileNameDisplay" class="sidebar-selected-file"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion Section 3: Notification Settings -->
+        <div class="sidebar-accordion-item" id="accNotifications">
+            <button type="button" class="sidebar-accordion-header" aria-expanded="false">
+                <div class="accordion-title-group">
+                    <span class="card-icon">🔔</span>
+                    <span class="accordion-title-text">Notification Settings</span>
+                </div>
+                <span class="accordion-chevron">❯</span>
+            </button>
+            <div class="sidebar-accordion-content">
+                <div class="accordion-inner sidebar-toggles-list">
+                    <div class="sidebar-toggle-row">
+                        <div class="toggle-info">
+                            <span class="toggle-title">Email Alerts</span>
+                            <span class="toggle-desc">Order receipts, status updates, and café promos</span>
+                        </div>
+                        <label class="switch-toggle" aria-label="Toggle Email Alerts">
+                            <input type="checkbox" id="toggleEmailNotif" checked>
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="sidebar-toggle-row">
+                        <div class="toggle-info">
+                            <span class="toggle-title">Site Alerts</span>
+                            <span class="toggle-desc">In-browser announcements & cart reminders</span>
+                        </div>
+                        <label class="switch-toggle" aria-label="Toggle Site Alerts">
+                            <input type="checkbox" id="toggleSiteNotif" checked>
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion Section 4: View Order History -->
+        <div class="sidebar-accordion-item" id="accOrderHistory">
+            <button type="button" class="sidebar-accordion-header" aria-expanded="false">
+                <div class="accordion-title-group">
+                    <span class="card-icon">📜</span>
+                    <span class="accordion-title-text">View Order History</span>
+                </div>
+                <span class="accordion-chevron">❯</span>
+            </button>
+            <div class="sidebar-accordion-content">
+                <div class="accordion-inner">
+                    <div class="sidebar-orders-list">
+                        <div class="sidebar-order-card">
+                            <div class="sidebar-order-header">
+                                <strong>Order #1042</strong>
+                                <span class="order-badge order-status-approved">Completed</span>
+                            </div>
+                            <div class="sidebar-order-items">Latte Coffee (x1), Caramel Macchiato (x2)</div>
+                            <div class="sidebar-order-meta">
+                                <span>$14.50</span>
+                                <span>Nov 08, 2026 10:15 AM</span>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-order-card">
+                            <div class="sidebar-order-header">
+                                <strong>Order #1039</strong>
+                                <span class="order-badge order-status-pending">Pending</span>
+                            </div>
+                            <div class="sidebar-order-items">Brown Cloud Frappuccino (x1)</div>
+                            <div class="sidebar-order-meta">
+                                <span>$5.75</span>
+                                <span>Nov 05, 2026 03:20 PM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align:center; margin-top:12px;">
+                        <a href="{{ path('account') }}" class="sidebar-btn sidebar-btn-outline" style="display:inline-block; text-decoration:none; width:100%; box-sizing:border-box;">View Full History & Receipts ⟶</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion Section 5: Help & Support -->
+        <div class="sidebar-accordion-item" id="accHelpSupport">
+            <button type="button" class="sidebar-accordion-header" aria-expanded="false">
+                <div class="accordion-title-group">
+                    <span class="card-icon">💬</span>
+                    <span class="accordion-title-text">Help & Support</span>
+                </div>
+                <span class="accordion-chevron">❯</span>
+            </button>
+            <div class="sidebar-accordion-content">
+                <div class="accordion-inner">
+                    <p class="sidebar-card-desc">Need assistance with café reservations, orders, or your account?</p>
+                    <div class="sidebar-support-links">
+                        <a href="mailto:purr&pour@gmail.com" class="support-link-item">
+                            <span class="support-icon">✉️</span>
+                            <div class="support-text">
+                                <strong>Email Customer Care</strong>
+                                <span id="custSupportEmailText">purr&pour@gmail.com</span>
+                            </div>
+                        </a>
+                        <a href="tel:09676767676" class="support-link-item">
+                            <span class="support-icon">📞</span>
+                            <div class="support-text">
+                                <strong>Hotline & Reservations</strong>
+                                <span id="custSupportPhoneText">0967 6767 6767</span>
+                            </div>
+                        </a>
+                        <div class="support-hours">
+                            <strong>🐾 Café Hours:</strong> <span id="custSupportHoursText">Mon - Sun, 8:00 AM - 9:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Footer with Center Log out Button -->
+    <div class="sidebar-footer">
+        <a href="{{ path('login') }}" class="sidebar-logout-btn">
+            <span>Log out</span>
+        </a>
+    </div>
+</aside>
+
+<script>
+(function() {
+    function initSidebar() {
+        const openBtn = document.getElementById('sidebarOpenBtn');
+        const closeBtn = document.getElementById('sidebarCloseBtn');
+        const sidebar = document.getElementById('appSidebar');
+        const overlay = document.getElementById('appSidebarOverlay');
+        const toast = document.getElementById('sidebarStatusToast');
+
+        if (!sidebar || !overlay) return;
+
+        window.showSidebarToast = function(msg, isSuccess) {
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.className = 'sidebar-status-toast is-visible ' + (isSuccess ? 'toast-success' : 'toast-error');
+            setTimeout(function() {
+                toast.className = 'sidebar-status-toast';
+            }, 3500);
+        };
+
+        function openSidebar() {
+            sidebar.classList.add('is-open');
+            overlay.classList.add('is-open');
+            document.body.classList.add('sidebar-locked');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('is-open');
+            overlay.classList.remove('is-open');
+            document.body.classList.remove('sidebar-locked');
+        }
+
+        if (openBtn) {
+            openBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                openSidebar();
+            });
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                closeSidebar();
+            });
+        }
+
+        overlay.addEventListener('click', closeSidebar);
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('is-open')) {
+                closeSidebar();
+            }
+        });
+
+        // Accordion Expand/Collapse Logic
+        const accordionHeaders = sidebar.querySelectorAll('.sidebar-accordion-header');
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const item = this.closest('.sidebar-accordion-item');
+                const isExpanded = item.classList.contains('is-open');
+
+                if (isExpanded) {
+                    item.classList.remove('is-open');
+                    this.setAttribute('aria-expanded', 'false');
+                } else {
+                    item.classList.add('is-open');
+                    this.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+
+        // Edit Display Name Form submission (Frontend mock)
+        const nameForm = document.getElementById('editDisplayNameForm');
+        const nameInput = document.getElementById('newDisplayNameInput');
+        const nameDisplay = document.getElementById('sidebarDisplayNameDisplay');
+
+        if (nameForm) {
+            nameForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const newName = nameInput.value.trim();
+                if (!newName) {
+                    window.showSidebarToast('Display name cannot be empty', false);
+                    return;
+                }
+                if (nameDisplay) nameDisplay.textContent = newName;
+                const placeholder = document.getElementById('sidebarAvatarPlaceholder');
+                if (placeholder && newName.length > 0) {
+                    placeholder.textContent = newName.charAt(0).toUpperCase();
+                }
+                window.showSidebarToast('Display name updated successfully!', true);
+            });
+        }
+
+        // Profile Picture Upload (Frontend preview)
+        const avatarInput = document.getElementById('avatarFileInput');
+        const uploadBtn = document.getElementById('uploadAvatarBtn');
+        const fileNameDisplay = document.getElementById('avatarFileNameDisplay');
+        const avatarImg = document.getElementById('sidebarAvatarImg');
+        const avatarPlaceholder = document.getElementById('sidebarAvatarPlaceholder');
+
+        if (avatarInput) {
+            avatarInput.addEventListener('change', function() {
+                if (avatarInput.files && avatarInput.files[0]) {
+                    const file = avatarInput.files[0];
+                    if (fileNameDisplay) fileNameDisplay.textContent = file.name;
+                    if (uploadBtn) uploadBtn.disabled = false;
+                } else {
+                    if (fileNameDisplay) fileNameDisplay.textContent = '';
+                    if (uploadBtn) uploadBtn.disabled = true;
+                }
+            });
+        }
+
+        if (uploadBtn) {
+            uploadBtn.addEventListener('click', function() {
+                if (!avatarInput || !avatarInput.files || !avatarInput.files[0]) return;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (avatarImg) {
+                        avatarImg.src = e.target.result;
+                        avatarImg.style.display = 'block';
+                    }
+                    if (avatarPlaceholder) {
+                        avatarPlaceholder.style.display = 'none';
+                    }
+                    if (fileNameDisplay) fileNameDisplay.textContent = '';
+                    uploadBtn.disabled = true;
+                    window.showSidebarToast('Profile picture preview updated!', true);
+                };
+                reader.readAsDataURL(avatarInput.files[0]);
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initSidebar);
+    } else {
+        initSidebar();
+    }
+})();
+</script>

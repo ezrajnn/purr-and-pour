@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Order Confirmed | Purr & Pour Café{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('loginHeader.css') }}">
+    <link rel="stylesheet" href="{{ asset('checkout.css') }}">
+    <link rel="stylesheet" href="{{ asset('orderConfirmation.css') }}">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% include 'navigation/header.html.twig' %}
+
+    <main class="checkout-page">
+        <div class="checkout-container receipt-container">
+            <div class="receipt-card">
+                <div class="receipt-header">
+                    <div class="success-badge">✓</div>
+                    <h1>Order Confirmed!</h1>
+                    <p class="receipt-subtitle">Thank you for your order, <strong>Jane Doe</strong>! We are preparing your café favorites.</p>
+                    <div class="order-number-pill">Order #00108</div>
+                </div>
+
+                <div class="order-status-banner status-approved">
+                    <div class="order-status-title">
+                        Order Status: ✓ Approved by Admin
+                    </div>
+                    <div class="order-status-desc">
+                        Great news! The café admin has approved your order. It is currently being prepared.
+                    </div>
+                </div>
+
+                <div class="receipt-section">
+                    <h2 class="section-title">Order Details</h2>
+                    <div class="order-meta-grid">
+                        <div class="meta-box">
+                            <span class="meta-label">Order Number</span>
+                            <span class="meta-value">#00108</span>
+                        </div>
+                        <div class="meta-box">
+                            <span class="meta-label">Date & Time</span>
+                            <span class="meta-value">{{ "now"|date("M d, Y h:i A") }}</span>
+                        </div>
+                        <div class="meta-box">
+                            <span class="meta-label">Payment Method</span>
+                            <span class="meta-value">Cash on Pickup</span>
+                        </div>
+                        <div class="meta-box">
+                            <span class="meta-label">Pickup Location</span>
+                            <span class="meta-value">Table 4, Cat Lounge</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="receipt-section">
+                    <h2 class="section-title">Purchased Items</h2>
+                    <div class="summary-items">
+                        <div class="summary-item">
+                            <div class="item-img-wrapper">
+                                <img src="{{ asset('elements/drink_1.png') }}" alt="Latte Coffee">
+                            </div>
+                            <div class="item-info">
+                                <h4>Latte Coffee</h4>
+                                <span class="item-qty-price">Qty: 1 × $4.50</span>
+                            </div>
+                            <div class="item-total">
+                                $4.50
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="item-img-wrapper">
+                                <img src="{{ asset('elements/pastry_1.png') }}" alt="Butter Croissant">
+                            </div>
+                            <div class="item-info">
+                                <h4>Butter Croissant</h4>
+                                <span class="item-qty-price">Qty: 1 × $3.50</span>
+                            </div>
+                            <div class="item-total">
+                                $3.50
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="summary-totals" style="margin-top: 15px;">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span>$8.00</span>
+                        </div>
+                        <div class="summary-row total-row">
+                            <span>Total Paid</span>
+                            <span>$8.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="receipt-actions" style="display: flex; gap: 15px; margin-top: 25px;">
+                    <a href="{{ path('menu') }}" class="btn-secondary" style="flex: 1; text-align: center; text-decoration: none; padding: 12px; border-radius: 8px; border: 1px solid #7c5c43; color: #7c5c43;">Back to Menu</a>
+                    <a href="{{ path('account') }}" class="btn-primary" style="flex: 1; text-align: center; text-decoration: none; padding: 12px; border-radius: 8px; background: #7c5c43; color: white;">View History</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'navigation/footer.html.twig' %}
+{% endblock %}
