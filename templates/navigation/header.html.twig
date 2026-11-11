@@ -24,38 +24,55 @@
                 <a href="{{ path('our_story') }}">Our Story</a>
             </li>
 
-            <li>
-                <a href="{{ path('cart') }}" class="header-cart-link">
-                    Cart <span class="header-cart-badge">2</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="{{ path('account') }}">My Account & History</a>
-            </li>
+            {% if app.session.get('user_id') %}
+                {% if app.session.get('role') != 'admin' %}
+                    <li>
+                        <a href="{{ path('cart') }}" class="header-cart-link">
+                            Cart
+                            {% set user_cart = app.session.get('cart', {}) %}
+                            {% set total_cart_qty = 0 %}
+                            {% for cid, cqty in user_cart %}
+                                {% set total_cart_qty = total_cart_qty + cqty %}
+                            {% endfor %}
+                            {% if total_cart_qty > 0 %}
+                                <span class="header-cart-badge">{{ total_cart_qty }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('account') }}">My Account & History</a>
+                    </li>
+                {% endif %}
+            {% endif %}
         </ul>
 
         <div class="login-header-account">
-            <a href="{{ path('menu') }}" class="header-register">
-                Order Now ⟶
-            </a>
-            <a href="{{ path('admin_dashboard') }}" class="header-register header-admin" style="margin-left: 8px;">
-                ⚙ Admin
-            </a>
-            <a href="{{ path('login') }}" class="header-login" style="margin-left: 8px;">
-                Log In
-            </a>
-            <button type="button" class="sidebar-toggle-btn" id="sidebarOpenBtn" aria-label="Open Sidebar Menu" style="margin-left: 8px;">
-                <span class="sidebar-toggle-icon">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </span>
-                <span class="sidebar-toggle-text">Menu</span>
-            </button>
+            {% if not app.session.get('user_id') %}
+                {# When logged OUT: Only show Log In button, NO Menu/Sidebar toggle button, NO Admin, NO Order Now #}
+                <a href="{{ path('login') }}" class="header-register">
+                    Log in
+                </a>
+            {% else %}
+                {# When logged IN: Show Menu (sidebar toggle) button. For admin, also show orange Admin button #}
+                {% if app.session.get('role') == 'admin' %}
+                    <a href="{{ path('admin_dashboard') }}" class="header-register header-admin">
+                        ⚙ Admin
+                    </a>
+                {% endif %}
+                <button type="button" class="sidebar-toggle-btn" id="sidebarOpenBtn" aria-label="Open Sidebar Menu">
+                    <span class="sidebar-toggle-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                    <span class="sidebar-toggle-text">Menu</span>
+                </button>
+            {% endif %}
         </div>
 
     </nav>
 </header>
 
-{% include 'navigation/sidebar.html.twig' %}
+{% if app.session.get('user_id') %}
+    {% include 'navigation/sidebar.html.twig' %}
+{% endif %}

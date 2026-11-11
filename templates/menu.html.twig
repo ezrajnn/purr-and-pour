@@ -13,44 +13,7 @@
     {% include 'navigation/header.html.twig' %}
 
     <main class="menu-page">
-        {% set menu_categories = {
-            'Hot Drinks': [
-                {'name': 'Latte Coffee', 'price': 4.50, 'image': 'drink_1.png', 'stock': 12},
-                {'name': 'Hot Americano', 'price': 3.75, 'image': 'drink_2.png', 'stock': 15},
-                {'name': 'Espresso Coffee', 'price': 3.25, 'image': 'drink_3.png', 'stock': 8},
-                {'name': 'Hot Mocha', 'price': 4.75, 'image': 'drink_4.png', 'stock': 10},
-                {'name': 'Cappuccino Delight', 'price': 4.25, 'image': 'drink_10.png', 'stock': 13},
-                {'name': 'Hazelnut Hot Chocolate', 'price': 4.60, 'image': 'drink_11.png', 'stock': 5}
-            ],
-            'Cold Drinks': [
-                {'name': 'Iced Caramel Frappe', 'price': 5.25, 'image': 'drink_5.png', 'stock': 7},
-                {'name': 'Matcha Green Tea', 'price': 4.95, 'image': 'drink_6.png', 'stock': 14},
-                {'name': 'Vanilla Cold Brew', 'price': 4.50, 'image': 'drink_7.png', 'stock': 9},
-                {'name': 'Iced Strawberry Latte', 'price': 5.00, 'image': 'drink_8.png', 'stock': 6},
-                {'name': 'Chai Spiced Latte', 'price': 4.80, 'image': 'drink_9.png', 'stock': 11},
-                {'name': 'Peach Iced Tea', 'price': 3.95, 'image': 'drink_12.png', 'stock': 16}
-            ],
-            'Pastries & Desserts': [
-                {'name': 'Butter Croissant', 'price': 3.50, 'image': 'pastry_1.png', 'stock': 10},
-                {'name': 'Chocolate Fudge Cake', 'price': 4.50, 'image': 'pastry_2.png', 'stock': 8},
-                {'name': 'Fudge Brownie', 'price': 3.25, 'image': 'pastry_3.png', 'stock': 12},
-                {'name': 'Chocolate Chip Cookie', 'price': 2.75, 'image': 'pastry_4.png', 'stock': 15},
-                {'name': 'Chocolate Cherry Tart', 'price': 4.25, 'image': 'pastry_5.png', 'stock': 6},
-                {'name': 'Tiramisu Slice', 'price': 4.95, 'image': 'pastry_6.png', 'stock': 9}
-            ],
-            'Rice Meals': [
-                {'name': 'Spamsilog', 'price': 7.50, 'image': 'meal_1.png', 'stock': 10},
-                {'name': 'Corned Beef Silog', 'price': 7.50, 'image': 'meal_2.png', 'stock': 8},
-                {'name': 'Longsilog', 'price': 7.25, 'image': 'meal_3.png', 'stock': 9},
-                {'name': 'Chicken Teriyaki Rice Bowl', 'price': 8.50, 'image': 'meal_6.png', 'stock': 12}
-            ],
-            'Pasta & Mains': [
-                {'name': 'Creamy Bacon Carbonara', 'price': 8.50, 'image': 'meal_4.png', 'stock': 7},
-                {'name': 'Classic Spaghetti Bolognese', 'price': 8.00, 'image': 'meal_5.png', 'stock': 9}
-            ]
-        } %}
-
-        {% for category_name, items in menu_categories %}
+        {% for category_name, items in categories %}
             <div class="menu-category-section">
                 <h2 class="category-heading">
                     {{ category_name }}
@@ -67,14 +30,30 @@
                                     <span>${{ product.price|number_format(2) }}</span>
                                 </div>
 
-                                <p class="menu-stock-available">
-                                    Available Stock: {{ product.stock }}
+                                <p class="{{ product.stock > 0 ? 'menu-stock-available' : 'menu-stock-out' }}">
+                                    {% if product.stock > 0 %}
+                                        Available Stock: {{ product.stock }}
+                                    {% else %}
+                                        Out of Stock
+                                    {% endif %}
                                 </p>
                             </div>
 
-                            <a href="{{ path('cart') }}" class="add-cart">
-                                Add to Cart
-                            </a>
+                            {% if app.session.get('role') == 'admin' %}
+                                <a href="{{ path('admin_dashboard', {'edit': product.id}) }}" class="add-cart admin-edit-btn">⚙ Edit in Admin</a>
+                            {% elseif product.stock > 0 %}
+                                <form action="{{ path('cart_add') }}" method="POST">
+                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="add-cart">
+                                        Add to Cart
+                                    </button>
+                                </form>
+                            {% else %}
+                                <button type="button" class="add-cart sold-out-btn" disabled style="opacity: 0.5; cursor: not-allowed; background: #9ca3af;">
+                                    Sold Out
+                                </button>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>

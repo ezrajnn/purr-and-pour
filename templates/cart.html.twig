@@ -19,79 +19,74 @@
                 <a href="{{ path('menu') }}">← Back to Menu</a>
             </div>
 
-            <!-- Cart table displaying products, price, and quantity -->
-            <table class="cart-table">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Subtotal</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="item-details">
-                                <h4>Latte Coffee</h4>
-                                <span class="product-id-badge">ID: 1</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="cart-item-price">$4.50</span>
-                        </td>
-                        <td>
-                            <div class="qty-controls">
-                                <button type="button" class="qty-btn" title="Decrease">−</button>
-                                <span class="qty-val">1</span>
-                                <button type="button" class="qty-btn" title="Increase">+</button>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="cart-item-total"><strong>$4.50</strong></span>
-                        </td>
-                        <td>
-                            <button type="button" class="remove-btn">Remove</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="item-details">
-                                <h4>Butter Croissant</h4>
-                                <span class="product-id-badge">ID: 13</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="cart-item-price">$3.50</span>
-                        </td>
-                        <td>
-                            <div class="qty-controls">
-                                <button type="button" class="qty-btn" title="Decrease">−</button>
-                                <span class="qty-val">1</span>
-                                <button type="button" class="qty-btn" title="Increase">+</button>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="cart-item-total"><strong>$3.50</strong></span>
-                        </td>
-                        <td>
-                            <button type="button" class="remove-btn">Remove</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            {% if cart_items is empty %}
+                <div style="text-align: center; padding: 50px 20px; background: #ffffff; border-radius: 12px; margin: 30px 0;">
+                    <p style="font-size: 18px; color: #6b7280; margin-bottom: 20px;">Your cart is empty.</p>
+                    <a href="{{ path('menu') }}" class="btn-primary" style="display: inline-block; padding: 10px 24px; text-decoration: none; border-radius: 20px;">Browse Menu</a>
+                </div>
+            {% else %}
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                            <tr>
+                                <td>
+                                    <div class="item-details">
+                                        <h4>{{ item.product.name }}</h4>
+                                        <span class="product-id-badge">ID: {{ item.product.id }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="cart-item-price">${{ item.product.price|number_format(2) }}</span>
+                                </td>
+                                <td>
+                                    <div class="qty-controls">
+                                        <form action="{{ path('cart_update') }}" method="POST" style="display:inline;">
+                                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                                            <input type="hidden" name="action" value="decrease">
+                                            <button type="submit" class="qty-btn" title="Decrease">−</button>
+                                        </form>
+                                        <span class="qty-val">{{ item.quantity }}</span>
+                                        <form action="{{ path('cart_update') }}" method="POST" style="display:inline;">
+                                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                                            <input type="hidden" name="action" value="increase">
+                                            <button type="submit" class="qty-btn" title="Increase">+</button>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="cart-item-total"><strong>${{ (item.product.price * item.quantity)|number_format(2) }}</strong></span>
+                                </td>
+                                <td>
+                                    <form action="{{ path('cart_remove') }}" method="POST">
+                                        <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                                        <button type="submit" class="remove-btn">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
 
-            <div class="cart-footer">
-                <div class="cart-summary">
-                    <div>Total items: <strong>2</strong></div>
-                    <div class="cart-total-amount">Order Total: <strong>$8.00</strong></div>
+                <div class="cart-footer">
+                    <div class="cart-summary">
+                        <div>Total items: <strong>{{ total_items }}</strong></div>
+                        <div class="cart-total-amount">Order Total: <strong>${{ total_amount|number_format(2) }}</strong></div>
+                    </div>
+                    <div class="cart-actions">
+                        <a href="{{ path('menu') }}" class="btn-secondary">Add More Items</a>
+                        <a href="{{ path('checkout') }}" class="btn-primary">Proceed to Checkout →</a>
+                    </div>
                 </div>
-                <div class="cart-actions">
-                    <a href="{{ path('menu') }}" class="btn-secondary">Add More Items</a>
-                    <a href="{{ path('checkout') }}" class="btn-primary">Proceed to Checkout →</a>
-                </div>
-            </div>
+            {% endif %}
         </div>
     </main>
 

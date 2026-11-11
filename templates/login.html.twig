@@ -20,10 +20,16 @@
                 Welcome back! Log in to continue to Purr & Pour.
             </p>
 
-            <form action="{{ path('home') }}" method="GET">
+            {% if error is defined and error %}
+                <p class="message" style="color: #b91c1c; background: #fee2e2; padding: 10px; border-radius: 6px; font-size: 14px; margin-bottom: 15px; text-align: center;">
+                    {{ error }}
+                </p>
+            {% endif %}
+
+            <form action="{{ path('login') }}" method="POST">
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="email" placeholder="example@email.com" required>
+                    <input type="email" name="email" value="{{ email|default('') }}" placeholder="example@email.com" required>
                 </div>
 
                 <div class="form-group">

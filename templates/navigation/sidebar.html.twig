@@ -18,14 +18,18 @@
         <div class="sidebar-profile-banner">
             <div class="sidebar-avatar-wrapper">
                 <img src="" alt="Avatar" class="sidebar-avatar-img" id="sidebarAvatarImg" style="display:none;">
-                <span class="sidebar-avatar-placeholder" id="sidebarAvatarPlaceholder">M</span>
+                <span class="sidebar-avatar-placeholder" id="sidebarAvatarPlaceholder">{{ (app.session.get('name', 'Member')|slice(0, 1))|upper }}</span>
             </div>
             <div class="sidebar-profile-details">
-                <h3 class="sidebar-display-name" id="sidebarDisplayNameDisplay">Member</h3>
-                <p class="sidebar-email">member@purrandpour.cafe</p>
+                <h3 class="sidebar-display-name" id="sidebarDisplayNameDisplay">{{ app.session.get('name', 'Member') }}</h3>
+                <p class="sidebar-email" id="sidebarDisplayEmailDisplay">{{ app.session.get('email', 'member@purrandpour.cafe') }}</p>
                 <div class="sidebar-badge-row">
-                    <span class="sidebar-member-badge badge-member">
-                        🐾 Café Member
+                    <span class="sidebar-member-badge {% if app.session.get('role') == 'admin' %}badge-admin{% else %}badge-member{% endif %}" id="sidebarDisplayRoleBadge">
+                        {% if app.session.get('role') == 'admin' %}
+                            ☕ Café Administrator
+                        {% else %}
+                            🐾 Café Member
+                        {% endif %}
                     </span>
                 </div>
             </div>
@@ -45,9 +49,9 @@
             </button>
             <div class="sidebar-accordion-content">
                 <div class="accordion-inner">
-                    <form id="editDisplayNameForm" onsubmit="event.preventDefault(); window.showSidebarToast && window.showSidebarToast('Display name updated!', true);">
+                    <form id="editDisplayNameForm">
                         <div class="sidebar-input-group">
-                            <input type="text" id="newDisplayNameInput" class="sidebar-input" value="Member" placeholder="Enter display name" required maxlength="50">
+                            <input type="text" id="newDisplayNameInput" class="sidebar-input" value="{{ app.session.get('name', 'Member') }}" placeholder="Enter display name" required maxlength="50">
                             <button type="submit" class="sidebar-btn sidebar-btn-primary" id="saveNameBtn">Save</button>
                         </div>
                         <small class="sidebar-input-hint">Changes how your name appears on your profile and receipts.</small>
@@ -80,7 +84,8 @@
             </div>
         </div>
 
-        <!-- Accordion Section 3: Notification Settings -->
+        {% if app.session.get('role') != 'admin' %}
+        <!-- Accordion Section 3: Notification Settings (Customer Only) -->
         <div class="sidebar-accordion-item" id="accNotifications">
             <button type="button" class="sidebar-accordion-header" aria-expanded="false">
                 <div class="accordion-title-group">
@@ -115,46 +120,35 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 
-        <!-- Accordion Section 4: View Order History -->
+        <!-- Accordion Section 4: View Order History / Orders Pending Approval -->
         <div class="sidebar-accordion-item" id="accOrderHistory">
             <button type="button" class="sidebar-accordion-header" aria-expanded="false">
                 <div class="accordion-title-group">
-                    <span class="card-icon">📜</span>
-                    <span class="accordion-title-text">View Order History</span>
+                    <span class="card-icon">{% if app.session.get('role') == 'admin' %}⏳{% else %}📜{% endif %}</span>
+                    <span class="accordion-title-text" id="sidebarOrderAccordionTitle">
+                        {% if app.session.get('role') == 'admin' %}
+                            Latest Orders (Approve / Reject)
+                        {% else %}
+                            View Order History
+                        {% endif %}
+                    </span>
                 </div>
                 <span class="accordion-chevron">❯</span>
             </button>
             <div class="sidebar-accordion-content">
                 <div class="accordion-inner">
-                    <div class="sidebar-orders-list">
-                        <div class="sidebar-order-card">
-                            <div class="sidebar-order-header">
-                                <strong>Order #1042</strong>
-                                <span class="order-badge order-status-approved">Completed</span>
-                            </div>
-                            <div class="sidebar-order-items">Latte Coffee (x1), Caramel Macchiato (x2)</div>
-                            <div class="sidebar-order-meta">
-                                <span>$14.50</span>
-                                <span>Nov 08, 2026 10:15 AM</span>
-                            </div>
-                        </div>
-
-                        <div class="sidebar-order-card">
-                            <div class="sidebar-order-header">
-                                <strong>Order #1039</strong>
-                                <span class="order-badge order-status-pending">Pending</span>
-                            </div>
-                            <div class="sidebar-order-items">Brown Cloud Frappuccino (x1)</div>
-                            <div class="sidebar-order-meta">
-                                <span>$5.75</span>
-                                <span>Nov 05, 2026 03:20 PM</span>
-                            </div>
-                        </div>
+                    <div class="sidebar-orders-list" id="sidebarOrdersListContainer">
+                        <p style="text-align:center; color:#8c7b6d; padding:10px 0;">Loading orders...</p>
                     </div>
 
                     <div style="text-align:center; margin-top:12px;">
-                        <a href="{{ path('account') }}" class="sidebar-btn sidebar-btn-outline" style="display:inline-block; text-decoration:none; width:100%; box-sizing:border-box;">View Full History & Receipts ⟶</a>
+                        {% if app.session.get('role') == 'admin' %}
+                            <a href="{{ path('admin_dashboard') }}#orders-section" class="sidebar-btn sidebar-btn-outline" style="display:inline-block; text-decoration:none; width:100%; box-sizing:border-box;">View Full Orders & Manage ⟶</a>
+                        {% else %}
+                            <a href="{{ path('account') }}" class="sidebar-btn sidebar-btn-outline" style="display:inline-block; text-decoration:none; width:100%; box-sizing:border-box;">View Full History & Receipts ⟶</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -165,42 +159,108 @@
             <button type="button" class="sidebar-accordion-header" aria-expanded="false">
                 <div class="accordion-title-group">
                     <span class="card-icon">💬</span>
-                    <span class="accordion-title-text">Help & Support</span>
+                    <span class="accordion-title-text">
+                        {% if app.session.get('role') == 'admin' %}
+                            Help & Support Settings
+                        {% else %}
+                            Help & Support
+                        {% endif %}
+                    </span>
                 </div>
                 <span class="accordion-chevron">❯</span>
             </button>
             <div class="sidebar-accordion-content">
                 <div class="accordion-inner">
-                    <p class="sidebar-card-desc">Need assistance with café reservations, orders, or your account?</p>
-                    <div class="sidebar-support-links">
-                        <a href="mailto:purr&pour@gmail.com" class="support-link-item">
-                            <span class="support-icon">✉️</span>
-                            <div class="support-text">
-                                <strong>Email Customer Care</strong>
-                                <span id="custSupportEmailText">purr&pour@gmail.com</span>
+                    {% if app.session.get('role') == 'admin' %}
+                        <!-- ADMIN MODE: Edit Support Info & Edit User Accounts -->
+                        <div class="sidebar-admin-support-box">
+                            <h5 style="margin:0 0 6px 0; font-size:13px; color:#5b4530; font-weight:700;">Update Support Contact Info</h5>
+                            <p class="sidebar-card-desc">Edit the public contact channels and operating hours displayed to customers:</p>
+                            <form id="adminSupportSettingsForm" style="display:flex; flex-direction:column; gap:8px;">
+                                <label style="display:block; font-size:11px; font-weight:600; color:#6b553e;">Support Email:
+                                    <input type="email" id="adminSupportEmail" class="sidebar-input" value="purr&pour@gmail.com" required style="width:100%; box-sizing:border-box; margin-top:2px;">
+                                </label>
+                                <label style="display:block; font-size:11px; font-weight:600; color:#6b553e;">Support Phone:
+                                    <input type="text" id="adminSupportPhone" class="sidebar-input" value="0967 6767 6767" required style="width:100%; box-sizing:border-box; margin-top:2px;">
+                                </label>
+                                <label style="display:block; font-size:11px; font-weight:600; color:#6b553e;">Café Hours:
+                                    <input type="text" id="adminSupportHours" class="sidebar-input" value="Mon - Sun, 8:00 AM - 9:00 PM" required style="width:100%; box-sizing:border-box; margin-top:2px;">
+                                </label>
+                                <button type="submit" class="sidebar-btn sidebar-btn-primary" id="saveSupportBtn" style="width:100%; margin-top:4px;">Save Contact Channels</button>
+                            </form>
+
+                            <hr style="border:none; border-top:1px dashed #dcd4cb; margin:14px 0;">
+
+                            <h5 style="margin:0 0 6px 0; font-size:13px; color:#5b4530; font-weight:700;">Manage Accounts</h5>
+                            <p class="sidebar-card-desc">Edit user profile accounts, email addresses, or roles:</p>
+                            <div class="sidebar-user-select-group">
+                                <select id="adminSelectUser" class="sidebar-input" style="width:100%; margin-bottom:8px;">
+                                    <option value="">-- Choose Account to Modify --</option>
+                                </select>
                             </div>
-                        </a>
-                        <a href="tel:09676767676" class="support-link-item">
-                            <span class="support-icon">📞</span>
-                            <div class="support-text">
-                                <strong>Hotline & Reservations</strong>
-                                <span id="custSupportPhoneText">0967 6767 6767</span>
+
+                            <form id="adminEditUserForm" style="display:none; flex-direction:column; gap:8px;">
+                                <input type="hidden" id="editTargetUserId" value="">
+                                <label style="display:block; font-size:11px; font-weight:600; color:#6b553e;">Name:
+                                    <input type="text" id="editTargetUserName" class="sidebar-input" required style="width:100%; box-sizing:border-box; margin-top:2px;">
+                                </label>
+                                <label style="display:block; font-size:11px; font-weight:600; color:#6b553e;">Email:
+                                    <input type="email" id="editTargetUserEmail" class="sidebar-input" required style="width:100%; box-sizing:border-box; margin-top:2px;">
+                                </label>
+                                <label style="display:block; font-size:11px; font-weight:600; color:#6b553e;">Role:
+                                    <select id="editTargetUserRole" class="sidebar-input" style="width:100%; box-sizing:border-box; margin-top:2px;">
+                                        <option value="customer">Customer (Member)</option>
+                                        <option value="admin">Administrator</option>
+                                    </select>
+                                </label>
+                                <div style="display:flex; gap:8px; margin-top:6px;">
+                                    <button type="submit" class="sidebar-btn sidebar-btn-primary" id="saveUserEditBtn" style="flex:1;">Update Account</button>
+                                    <button type="button" class="sidebar-btn sidebar-btn-outline" id="cancelUserEditBtn">Cancel</button>
+                                </div>
+                            </form>
+                            <div style="text-align:center; margin-top:10px;">
+                                <a href="{{ path('admin_dashboard') }}#accounts-section" style="font-size:12px; color:#8c6d48; font-weight:600; text-decoration:underline;">Open Full Accounts Directory ⟶</a>
                             </div>
-                        </a>
-                        <div class="support-hours">
-                            <strong>🐾 Café Hours:</strong> <span id="custSupportHoursText">Mon - Sun, 8:00 AM - 9:00 PM</span>
                         </div>
-                    </div>
+                    {% else %}
+                        <!-- CUSTOMER MODE: View Support Information -->
+                        <p class="sidebar-card-desc">Need assistance with café reservations, orders, or your account?</p>
+                        <div class="sidebar-support-links">
+                            <a href="mailto:purr&pour@gmail.com" class="support-link-item" id="custSupportEmailLink">
+                                <span class="support-icon">✉️</span>
+                                <div class="support-text">
+                                    <strong>Email Customer Care</strong>
+                                    <span id="custSupportEmailText">purr&pour@gmail.com</span>
+                                </div>
+                            </a>
+                            <a href="tel:09676767676" class="support-link-item" id="custSupportPhoneLink">
+                                <span class="support-icon">📞</span>
+                                <div class="support-text">
+                                    <strong>Hotline & Reservations</strong>
+                                    <span id="custSupportPhoneText">0967 6767 6767</span>
+                                </div>
+                            </a>
+                            <div class="support-hours">
+                                <strong>🐾 Café Hours:</strong> <span id="custSupportHoursText">Mon - Sun, 8:00 AM - 9:00 PM</span>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Sidebar Footer with Center Log out Button -->
+    <!-- Sidebar Footer with Action Button (Admin Dashboard for Admin, Log out for Member) -->
     <div class="sidebar-footer">
-        <a href="{{ path('login') }}" class="sidebar-logout-btn">
-            <span>Log out</span>
-        </a>
+        {% if app.session.get('role') == 'admin' %}
+            <a href="{{ path('admin_dashboard') }}" class="sidebar-logout-btn" style="background: linear-gradient(135deg, #6b4c2a 0%, #8c6d48 100%); color:#fff; border-color:#6b4c2a;">
+                <span>⚙ Admin Dashboard</span>
+            </a>
+        {% else %}
+            <a href="{{ path('logout') }}" class="sidebar-logout-btn">
+                <span>Log out</span>
+            </a>
+        {% endif %}
     </div>
 </aside>
 
@@ -228,6 +288,7 @@
             sidebar.classList.add('is-open');
             overlay.classList.add('is-open');
             document.body.classList.add('sidebar-locked');
+            loadSidebarDynamicData();
         }
 
         function closeSidebar() {
@@ -275,10 +336,131 @@
             });
         });
 
-        // Edit Display Name Form submission (Frontend mock)
+        // Load dynamic data from /api/sidebar/data
+        function loadSidebarDynamicData() {
+            fetch('{{ path('api_sidebar_data') }}')
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.success) return;
+
+                    // 1. Sync User Info & Display Name
+                    const user = data.user;
+                    const nameDisplay = document.getElementById('sidebarDisplayNameDisplay');
+                    const nameInput = document.getElementById('newDisplayNameInput');
+                    const emailDisplay = document.getElementById('sidebarDisplayEmailDisplay');
+                    const placeholder = document.getElementById('sidebarAvatarPlaceholder');
+
+                    if (user && user.name) {
+                        if (nameDisplay) nameDisplay.textContent = user.name;
+                        if (nameInput) nameInput.value = user.name;
+                        if (placeholder) placeholder.textContent = user.name.charAt(0).toUpperCase();
+                    }
+                    if (user && user.email && emailDisplay) {
+                        emailDisplay.textContent = user.email;
+                    }
+
+                    // 2. Support Info
+                    const sup = data.support;
+                    if (sup) {
+                        // Admin inputs
+                        const adminEmail = document.getElementById('adminSupportEmail');
+                        const adminPhone = document.getElementById('adminSupportPhone');
+                        const adminHours = document.getElementById('adminSupportHours');
+                        if (adminEmail) adminEmail.value = sup.email;
+                        if (adminPhone) adminPhone.value = sup.phone;
+                        if (adminHours) adminHours.value = sup.hours;
+
+                        // Customer view texts
+                        const custEmail = document.getElementById('custSupportEmailText');
+                        const custPhone = document.getElementById('custSupportPhoneText');
+                        const custHours = document.getElementById('custSupportHoursText');
+                        const emailLink = document.getElementById('custSupportEmailLink');
+                        const phoneLink = document.getElementById('custSupportPhoneLink');
+
+                        if (custEmail) custEmail.textContent = sup.email;
+                        if (custPhone) custPhone.textContent = sup.phone;
+                        if (custHours) custHours.textContent = sup.hours;
+                        if (emailLink) emailLink.href = 'mailto:' + sup.email;
+                        if (phoneLink) phoneLink.href = 'tel:' + sup.phone.replace(/[^0-9+]/g, '');
+                    }
+
+                    // 3. Render Orders in Sidebar
+                    renderSidebarOrders(data.orders, data.isAdmin);
+
+                    // 4. Populate Users dropdown for Admin
+                    if (data.isAdmin && data.users) {
+                        const select = document.getElementById('adminSelectUser');
+                        if (select) {
+                            select.innerHTML = '<option value="">-- Choose Account to Modify --</option>';
+                            data.users.forEach(u => {
+                                const opt = document.createElement('option');
+                                opt.value = u.id;
+                                opt.setAttribute('data-name', u.name);
+                                opt.setAttribute('data-email', u.email);
+                                opt.setAttribute('data-role', u.role);
+                                opt.textContent = '#' + u.id + ' - ' + u.name + ' (' + u.email + ') [' + u.role + ']';
+                                select.appendChild(opt);
+                            });
+                        }
+                    }
+                })
+                .catch(err => console.error('Error loading sidebar data:', err));
+        }
+
+        function renderSidebarOrders(orders, isAdmin) {
+            const container = document.getElementById('sidebarOrdersListContainer');
+            if (!container) return;
+
+            if (!orders || orders.length === 0) {
+                container.innerHTML = '<p class="sidebar-card-desc" style="text-align:center; padding:10px 0;">No orders found.</p>';
+                return;
+            }
+
+            let html = '';
+            orders.forEach(o => {
+                let badgeCls = 'order-status-pending';
+                if (o.status === 'Approved' || o.status === 'Confirmed') badgeCls = 'order-status-approved';
+                else if (o.status === 'Cancelled') badgeCls = 'order-status-cancelled';
+
+                html += `
+                    <div class="sidebar-order-card" id="sidebarOrderCard_${o.id}">
+                        <div class="sidebar-order-header">
+                            <strong>Order #${o.id} ${isAdmin && o.customerName ? '<span class="customer-tag">— ' + escapeHtml(o.customerName) + '</span>' : ''}</strong>
+                            <span class="order-badge ${badgeCls}">${escapeHtml(o.status)}</span>
+                        </div>
+                        <div class="sidebar-order-items">${escapeHtml(o.itemsSummary || 'Items')}</div>
+                        <div class="sidebar-order-meta">
+                            <span>$${parseFloat(o.totalAmount || 0).toFixed(2)}</span>
+                            <span>${escapeHtml(o.createdAt)}</span>
+                        </div>
+                `;
+
+                if (isAdmin && o.status === 'Pending') {
+                    html += `
+                        <div class="sidebar-admin-order-actions" style="display:flex; gap:6px; margin-top:8px;">
+                            <button type="button" class="btn-sidebar-approve" style="flex:1; background:#38a169; color:#fff; border:none; padding:6px; border-radius:4px; font-weight:600; cursor:pointer;" onclick="updateSidebarOrderStatus(${o.id}, 'Approved')">✓ Approve</button>
+                            <button type="button" class="btn-sidebar-reject" style="flex:1; background:#e53e3e; color:#fff; border:none; padding:6px; border-radius:4px; font-weight:600; cursor:pointer;" onclick="updateSidebarOrderStatus(${o.id}, 'Cancelled')">✕ Reject</button>
+                        </div>
+                    `;
+                }
+
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 1. Edit Display Name Form submission
         const nameForm = document.getElementById('editDisplayNameForm');
         const nameInput = document.getElementById('newDisplayNameInput');
         const nameDisplay = document.getElementById('sidebarDisplayNameDisplay');
+        const saveNameBtn = document.getElementById('saveNameBtn');
 
         if (nameForm) {
             nameForm.addEventListener('submit', function(e) {
@@ -288,16 +470,41 @@
                     window.showSidebarToast('Display name cannot be empty', false);
                     return;
                 }
-                if (nameDisplay) nameDisplay.textContent = newName;
-                const placeholder = document.getElementById('sidebarAvatarPlaceholder');
-                if (placeholder && newName.length > 0) {
-                    placeholder.textContent = newName.charAt(0).toUpperCase();
-                }
-                window.showSidebarToast('Display name updated successfully!', true);
+
+                saveNameBtn.disabled = true;
+                saveNameBtn.textContent = 'Saving...';
+
+                const formData = new FormData();
+                formData.append('name', newName);
+
+                fetch('{{ path('api_sidebar_update_name') }}', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(r => r.json())
+                .then(data => {
+                    saveNameBtn.disabled = false;
+                    saveNameBtn.textContent = 'Save';
+                    if (data.success) {
+                        if (nameDisplay) nameDisplay.textContent = newName;
+                        const placeholder = document.getElementById('sidebarAvatarPlaceholder');
+                        if (placeholder && newName.length > 0) {
+                            placeholder.textContent = newName.charAt(0).toUpperCase();
+                        }
+                        window.showSidebarToast(data.message, true);
+                    } else {
+                        window.showSidebarToast(data.message || 'Failed to update name', false);
+                    }
+                })
+                .catch(() => {
+                    saveNameBtn.disabled = false;
+                    saveNameBtn.textContent = 'Save';
+                    window.showSidebarToast('Network error while saving name', false);
+                });
             });
         }
 
-        // Profile Picture Upload (Frontend preview)
+        // 2. Profile Picture Upload (Frontend preview)
         const avatarInput = document.getElementById('avatarFileInput');
         const uploadBtn = document.getElementById('uploadAvatarBtn');
         const fileNameDisplay = document.getElementById('avatarFileNameDisplay');
@@ -336,6 +543,149 @@
                 reader.readAsDataURL(avatarInput.files[0]);
             });
         }
+
+        // 3. Admin Help & Support settings form
+        const adminSupportForm = document.getElementById('adminSupportSettingsForm');
+        const saveSupportBtn = document.getElementById('saveSupportBtn');
+        if (adminSupportForm) {
+            adminSupportForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const semail = document.getElementById('adminSupportEmail').value.trim();
+                const sphone = document.getElementById('adminSupportPhone').value.trim();
+                const shours = document.getElementById('adminSupportHours').value.trim();
+
+                saveSupportBtn.disabled = true;
+                saveSupportBtn.textContent = 'Saving...';
+
+                const fd = new FormData();
+                fd.append('email', semail);
+                fd.append('phone', sphone);
+                fd.append('hours', shours);
+
+                fetch('{{ path('api_sidebar_update_support') }}', {
+                    method: 'POST',
+                    body: fd
+                })
+                .then(r => r.json())
+                .then(data => {
+                    saveSupportBtn.disabled = false;
+                    saveSupportBtn.textContent = 'Save Contact Channels';
+                    if (data.success) {
+                        window.showSidebarToast(data.message, true);
+                    } else {
+                        window.showSidebarToast(data.message || 'Failed to save', false);
+                    }
+                })
+                .catch(() => {
+                    saveSupportBtn.disabled = false;
+                    saveSupportBtn.textContent = 'Save Contact Channels';
+                    window.showSidebarToast('Network error saving contact details', false);
+                });
+            });
+        }
+
+        // 4. Admin Manage Accounts in Sidebar
+        const adminSelectUser = document.getElementById('adminSelectUser');
+        const adminEditUserForm = document.getElementById('adminEditUserForm');
+        const editTargetUserId = document.getElementById('editTargetUserId');
+        const editTargetUserName = document.getElementById('editTargetUserName');
+        const editTargetUserEmail = document.getElementById('editTargetUserEmail');
+        const editTargetUserRole = document.getElementById('editTargetUserRole');
+        const cancelUserEditBtn = document.getElementById('cancelUserEditBtn');
+        const saveUserEditBtn = document.getElementById('saveUserEditBtn');
+
+        if (adminSelectUser && adminEditUserForm) {
+            adminSelectUser.addEventListener('change', function() {
+                const sel = this.options[this.selectedIndex];
+                const uid = this.value;
+                if (!uid) {
+                    adminEditUserForm.style.display = 'none';
+                    return;
+                }
+                editTargetUserId.value = uid;
+                editTargetUserName.value = sel.getAttribute('data-name') || '';
+                editTargetUserEmail.value = sel.getAttribute('data-email') || '';
+                editTargetUserRole.value = sel.getAttribute('data-role') || 'customer';
+                adminEditUserForm.style.display = 'flex';
+            });
+
+            if (cancelUserEditBtn) {
+                cancelUserEditBtn.addEventListener('click', function() {
+                    adminSelectUser.value = '';
+                    adminEditUserForm.style.display = 'none';
+                });
+            }
+
+            adminEditUserForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveUserEditBtn.disabled = true;
+                saveUserEditBtn.textContent = 'Saving...';
+
+                const fd = new FormData();
+                fd.append('user_id', editTargetUserId.value);
+                fd.append('name', editTargetUserName.value.trim());
+                fd.append('email', editTargetUserEmail.value.trim());
+                fd.append('role', editTargetUserRole.value);
+
+                fetch('{{ path('api_sidebar_edit_user') }}', {
+                    method: 'POST',
+                    body: fd
+                })
+                .then(r => r.json())
+                .then(data => {
+                    saveUserEditBtn.disabled = false;
+                    saveUserEditBtn.textContent = 'Update Account';
+                    if (data.success) {
+                        window.showSidebarToast(data.message, true);
+                        const selOpt = adminSelectUser.options[adminSelectUser.selectedIndex];
+                        if (selOpt) {
+                            selOpt.setAttribute('data-name', editTargetUserName.value);
+                            selOpt.setAttribute('data-email', editTargetUserEmail.value);
+                            selOpt.setAttribute('data-role', editTargetUserRole.value);
+                            selOpt.textContent = '#' + editTargetUserId.value + ' - ' + editTargetUserName.value + ' (' + editTargetUserEmail.value + ') [' + editTargetUserRole.value + ']';
+                        }
+                    } else {
+                        window.showSidebarToast(data.message || 'Failed to update account', false);
+                    }
+                })
+                .catch(() => {
+                    saveUserEditBtn.disabled = false;
+                    saveUserEditBtn.textContent = 'Update Account';
+                    window.showSidebarToast('Network error updating account', false);
+                });
+            });
+        }
+
+        // Global helper for quick order status update from sidebar
+        window.updateSidebarOrderStatus = function(orderId, newStatus) {
+            if (!confirm(`Are you sure you want to mark Order #${orderId} as '${newStatus}'?`)) {
+                return;
+            }
+
+            const fd = new FormData();
+            fd.append('order_id', orderId);
+            fd.append('status', newStatus);
+
+            fetch('{{ path('api_sidebar_update_order_status') }}', {
+                method: 'POST',
+                body: fd
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    window.showSidebarToast(data.message, true);
+                    loadSidebarDynamicData();
+                } else {
+                    window.showSidebarToast(data.message || 'Error updating order', false);
+                }
+            })
+            .catch(() => {
+                window.showSidebarToast('Network error while updating order', false);
+            });
+        };
+
+        // Load initially on page load
+        loadSidebarDynamicData();
     }
 
     if (document.readyState === 'loading') {

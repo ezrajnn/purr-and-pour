@@ -19,16 +19,16 @@
                 <div class="receipt-header">
                     <div class="success-badge">✓</div>
                     <h1>Order Confirmed!</h1>
-                    <p class="receipt-subtitle">Thank you for your order, <strong>Jane Doe</strong>! We are preparing your café favorites.</p>
-                    <div class="order-number-pill">Order #00108</div>
+                    <p class="receipt-subtitle">Thank you for your order, <strong>{{ order.customerName|default(app.session.get('name')) }}</strong>! We are preparing your café favorites.</p>
+                    <div class="order-number-pill">Order #{{ order ? '%05d'|format(order.id) : '00108' }}</div>
                 </div>
 
-                <div class="order-status-banner status-approved">
+                <div class="order-status-banner status-pending">
                     <div class="order-status-title">
-                        Order Status: ✓ Approved by Admin
+                        Order Status: {{ order.status|default('Pending Admin Approval') }}
                     </div>
                     <div class="order-status-desc">
-                        Great news! The café admin has approved your order. It is currently being prepared.
+                        Your order has been recorded and stocks have been reserved. The café admin will confirm your order shortly.
                     </div>
                 </div>
 
@@ -37,19 +37,19 @@
                     <div class="order-meta-grid">
                         <div class="meta-box">
                             <span class="meta-label">Order Number</span>
-                            <span class="meta-value">#00108</span>
+                            <span class="meta-value">#{{ order ? '%05d'|format(order.id) : '00108' }}</span>
                         </div>
                         <div class="meta-box">
                             <span class="meta-label">Date & Time</span>
-                            <span class="meta-value">{{ "now"|date("M d, Y h:i A") }}</span>
+                            <span class="meta-value">{{ order ? order.createdAt|date("M d, Y h:i A") : "now"|date("M d, Y h:i A") }}</span>
                         </div>
                         <div class="meta-box">
                             <span class="meta-label">Payment Method</span>
-                            <span class="meta-value">Cash on Pickup</span>
+                            <span class="meta-value">{{ order.paymentMethod|default('Cash on Pickup') }}</span>
                         </div>
                         <div class="meta-box">
                             <span class="meta-label">Pickup Location</span>
-                            <span class="meta-value">Table 4, Cat Lounge</span>
+                            <span class="meta-value">{{ order.address|default('Table 1, Cat Lounge') }}</span>
                         </div>
                     </div>
                 </div>
@@ -57,40 +57,32 @@
                 <div class="receipt-section">
                     <h2 class="section-title">Purchased Items</h2>
                     <div class="summary-items">
-                        <div class="summary-item">
-                            <div class="item-img-wrapper">
-                                <img src="{{ asset('elements/drink_1.png') }}" alt="Latte Coffee">
+                        {% if order and order.orderItems %}
+                            {% for item in order.orderItems %}
+                                <div class="summary-item">
+                                    <div class="item-img-wrapper">
+                                        <img src="{{ asset('elements/' ~ (item.product ? item.product.image : 'drink_1.png')) }}" alt="{{ item.productName }}">
+                                    </div>
+                                    <div class="item-info">
+                                        <h4>{{ item.productName }}</h4>
+                                        <span class="item-qty-price">Qty: {{ item.quantity }} × ${{ item.price|number_format(2) }}</span>
+                                    </div>
+                                    <div class="item-total">
+                                        ${{ item.subtotal|number_format(2) }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="summary-item">
+                                <div class="item-info"><h4>No items</h4></div>
                             </div>
-                            <div class="item-info">
-                                <h4>Latte Coffee</h4>
-                                <span class="item-qty-price">Qty: 1 × $4.50</span>
-                            </div>
-                            <div class="item-total">
-                                $4.50
-                            </div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="item-img-wrapper">
-                                <img src="{{ asset('elements/pastry_1.png') }}" alt="Butter Croissant">
-                            </div>
-                            <div class="item-info">
-                                <h4>Butter Croissant</h4>
-                                <span class="item-qty-price">Qty: 1 × $3.50</span>
-                            </div>
-                            <div class="item-total">
-                                $3.50
-                            </div>
-                        </div>
+                        {% endif %}
                     </div>
 
                     <div class="summary-totals" style="margin-top: 15px;">
-                        <div class="summary-row">
-                            <span>Subtotal</span>
-                            <span>$8.00</span>
-                        </div>
                         <div class="summary-row total-row">
-                            <span>Total Paid</span>
-                            <span>$8.00</span>
+                            <span>Total Paid / Due</span>
+                            <span>${{ order ? order.totalAmount|number_format(2) : '0.00' }}</span>
                         </div>
                     </div>
                 </div>

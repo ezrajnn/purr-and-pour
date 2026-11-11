@@ -17,21 +17,29 @@
         <div class="profile-card">
             <div class="profile-details">
                 <div class="profile-avatar">
-                    J
+                    {{ (user.name|default(app.session.get('name', 'Member'))|slice(0, 1))|upper }}
                 </div>
                 <div class="profile-info">
-                    <h1>Jane Doe</h1>
-                    <p>jane@example.com</p>
+                    <h1>{{ user.name|default(app.session.get('name')) }}</h1>
+                    <p>{{ user.email|default(app.session.get('email')) }}</p>
                     <div>
-                        <span class="role-badge">Café Member</span>
+                        <span class="role-badge">
+                            {% if (user.role|default(app.session.get('role'))) == 'admin' %}
+                                ⚙ Administrator
+                            {% else %}
+                                🐾 Café Member
+                            {% endif %}
+                        </span>
                     </div>
                 </div>
             </div>
 
             <div class="profile-actions">
-                <a href="{{ path('admin_dashboard') }}" class="btn-order-now" style="background-color: #8c6d48;">⚙ Admin Dashboard</a>
+                {% if (user.role|default(app.session.get('role'))) == 'admin' %}
+                    <a href="{{ path('admin_dashboard') }}" class="btn-order-now" style="background-color: #8c6d48;">⚙ Admin Dashboard</a>
+                {% endif %}
                 <a href="{{ path('menu') }}" class="btn-order-now">Order Now →</a>
-                <a href="{{ path('login') }}" class="btn-order-now" style="background-color: #a89f91;">Log Out</a>
+                <a href="{{ path('logout') }}" class="btn-order-now" style="background-color: #a89f91;">Log Out</a>
             </div>
         </div>
 
@@ -39,19 +47,19 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <span>Total Orders</span>
-                <h3>4</h3>
+                <h3>{{ total_orders|default(0) }}</h3>
             </div>
             <div class="stat-card">
                 <span>Lifetime Spent</span>
-                <h3>$32.50</h3>
+                <h3>${{ total_spent|default(0.00)|number_format(2) }}</h3>
             </div>
             <div class="stat-card">
                 <span>Pending Orders</span>
-                <h3>1</h3>
+                <h3>{{ pending_count|default(0) }}</h3>
             </div>
             <div class="stat-card">
                 <span>Approved & Ready</span>
-                <h3>2</h3>
+                <h3>{{ approved_count|default(0) }}</h3>
             </div>
         </div>
 
@@ -61,9 +69,9 @@
                 <h2>☕ Transaction & Order History</h2>
                 
                 <div class="status-filters">
-                    <button type="button" class="filter-btn active" onclick="filterOrders('all', this)">All Orders (4)</button>
-                    <button type="button" class="filter-btn" onclick="filterOrders('Pending', this)">Pending</button>
-                    <button type="button" class="filter-btn" onclick="filterOrders('Approved', this)">Approved</button>
+                    <button type="button" class="filter-btn active" onclick="filterOrders('all', this)">All Orders ({{ total_orders|default(0) }})</button>
+                    <button type="button" class="filter-btn" onclick="filterOrders('Pending', this)">Pending ({{ pending_count|default(0) }})</button>
+                    <button type="button" class="filter-btn" onclick="filterOrders('Approved', this)">Approved ({{ approved_count|default(0) }})</button>
                     <button type="button" class="filter-btn" onclick="filterOrders('Completed', this)">Completed</button>
                 </div>
             </div>
@@ -75,7 +83,6 @@
                             <th>Order ID</th>
                             <th>Date & Time</th>
                             <th>Items Summary</th>
-                            <th>Units</th>
                             <th>Payment Method</th>
                             <th>Amount</th>
                             <th>Status</th>
@@ -83,97 +90,37 @@
                         </tr>
                     </thead>
                     <tbody id="orders-tbody">
-                        <!-- Order 1: Pending -->
-                        <tr data-status="Pending">
-                            <td><strong style="color: #634832;">#00109</strong></td>
-                            <td>Oct 19, 2026 10:45 AM</td>
-                            <td>Caramel Macchiato (x1), Strawberry Tart (x1)</td>
-                            <td>2</td>
-                            <td>
-                                GCash
-                                <div style="font-size: 11px; color: #8c7b6d;">Ref: 100482918471</div>
-                            </td>
-                            <td><strong>$9.00</strong></td>
-                            <td>
-                                <span class="status-pill status-pending">
-                                    <span class="status-dot"></span>
-                                    Pending Approval
-                                </span>
-                                <span class="status-help-msg">Waiting for café confirmation</span>
-                            </td>
-                            <td>
-                                <a href="{{ path('order_confirmation') }}" class="receipt-link-btn">View Receipt</a>
-                            </td>
-                        </tr>
-
-                        <!-- Order 2: Approved -->
-                        <tr data-status="Approved">
-                            <td><strong style="color: #634832;">#00108</strong></td>
-                            <td>Oct 19, 2026 10:15 AM</td>
-                            <td>Latte Coffee (x1), Butter Croissant (x1)</td>
-                            <td>2</td>
-                            <td>
-                                Cash on Pickup
-                                <div style="font-size: 11px; color: #8c7b6d;">Pickup: Table 4</div>
-                            </td>
-                            <td><strong>$8.00</strong></td>
-                            <td>
-                                <span class="status-pill status-approved">
-                                    <span class="status-dot"></span>
-                                    Approved
-                                </span>
-                                <span class="status-help-msg">Being prepared by baristas</span>
-                            </td>
-                            <td>
-                                <a href="{{ path('order_confirmation') }}" class="receipt-link-btn">View Receipt</a>
-                            </td>
-                        </tr>
-
-                        <!-- Order 3: Completed -->
-                        <tr data-status="Completed">
-                            <td><strong style="color: #634832;">#00094</strong></td>
-                            <td>Oct 12, 2026 02:40 PM</td>
-                            <td>Iced Caramel Frappe (x2), Cinnamon Swirl (x1)</td>
-                            <td>3</td>
-                            <td>
-                                GCash
-                                <div style="font-size: 11px; color: #8c7b6d;">Ref: 100293847291</div>
-                            </td>
-                            <td><strong>$14.25</strong></td>
-                            <td>
-                                <span class="status-pill status-completed">
-                                    <span class="status-dot"></span>
-                                    Completed
-                                </span>
-                                <span class="status-help-msg">Picked up & fulfilled</span>
-                            </td>
-                            <td>
-                                <a href="{{ path('order_confirmation') }}" class="receipt-link-btn">View Receipt</a>
-                            </td>
-                        </tr>
-
-                        <!-- Order 4: Completed -->
-                        <tr data-status="Completed">
-                            <td><strong style="color: #634832;">#00072</strong></td>
-                            <td>Oct 05, 2026 09:20 AM</td>
-                            <td>Hot Mocha (x1)</td>
-                            <td>1</td>
-                            <td>
-                                Cash on Pickup
-                                <div style="font-size: 11px; color: #8c7b6d;">Takeaway</div>
-                            </td>
-                            <td><strong>$4.75</strong></td>
-                            <td>
-                                <span class="status-pill status-completed">
-                                    <span class="status-dot"></span>
-                                    Completed
-                                </span>
-                                <span class="status-help-msg">Picked up & fulfilled</span>
-                            </td>
-                            <td>
-                                <a href="{{ path('order_confirmation') }}" class="receipt-link-btn">View Receipt</a>
-                            </td>
-                        </tr>
+                        {% if orders is empty %}
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 30px; color: #8c7b6d;">
+                                    No transaction history found yet. Visit our menu to place an order!
+                                </td>
+                            </tr>
+                        {% else %}
+                            {% for ord in orders %}
+                                <tr data-status="{{ ord.status }}">
+                                    <td><strong style="color: #634832;">#{{ '%05d'|format(ord.id) }}</strong></td>
+                                    <td>{{ ord.createdAt|date("M d, Y h:i A") }}</td>
+                                    <td>{{ ord.itemsSummary|default('Order items') }}</td>
+                                    <td>
+                                        {{ ord.paymentMethod }}
+                                        {% if ord.referenceNumber %}
+                                            <div style="font-size: 11px; color: #8c7b6d;">Ref: {{ ord.referenceNumber }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td><strong>${{ ord.totalAmount|number_format(2) }}</strong></td>
+                                    <td>
+                                        <span class="status-pill status-{{ ord.status|lower }}">
+                                            <span class="status-dot"></span>
+                                            {{ ord.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('order_confirmation', {'id': ord.id}) }}" class="receipt-link-btn">View Receipt</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
             </div>

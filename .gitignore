@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -18,3 +19,6 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+=======
+password.txt
+>>>>>>> 9fe2ec46b95768808e85db35cfc158fc68d5d8fa

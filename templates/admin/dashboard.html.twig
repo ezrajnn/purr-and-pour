@@ -181,7 +181,7 @@
             </h2>
 
 
-            <form action="#" method="POST">
+            <form action="{{ path('admin_dashboard') }}" method="POST">
 
                 <input type="hidden"
                        name="action"
@@ -373,7 +373,7 @@
 
                 {% if edit_product %}
 
-                    <a href="#"
+                    <a href="{{ path('admin_dashboard') }}"
                        class="btn-cancel">
                         Cancel Edit
                     </a>
@@ -515,7 +515,7 @@
                                 <!-- QUICK STOCK -->
                                 <td>
 
-                                    <form action="#"
+                                    <form action="{{ path('admin_dashboard') }}"
                                           method="POST"
                                           class="quick-stock-form"
                                           style="display:flex; align-items:center; gap:3px;">
@@ -574,13 +574,14 @@
                                 <!-- ACTIONS -->
                                 <td class="action-links">
 
-                                    <a href="#"
+                                    <a href="{{ path('admin_dashboard', {'edit': prod.id}) }}"
                                        class="action-edit">
                                         Edit
                                     </a>
 
-                                    <a href="#"
-                                       class="action-delete">
+                                    <a href="{{ path('admin_dashboard', {'delete': prod.id}) }}"
+                                       class="action-delete"
+                                       onclick="return confirm('Are you sure you want to delete {{ prod.name|escape('js') }}?');">
                                         Delete
                                     </a>
 
@@ -820,7 +821,7 @@
                                 <!-- ACTION -->
                                 <td>
 
-                                    <form action="#"
+                                    <form action="{{ path('admin_dashboard') }}#orders-section"
                                           method="POST"
                                           style="
                                               display:flex;
@@ -957,7 +958,7 @@
 
             {% if edit_user %}
 
-                <a href="#accounts-section"
+                <a href="{{ path('admin_dashboard') }}#accounts-section"
                    style="
                        font-size:13px;
                        color:#785338;
@@ -1000,7 +1001,7 @@
                 </h3>
 
 
-                <form action="#accounts-section"
+                <form action="{{ path('admin_dashboard') }}#accounts-section"
                       method="POST"
                       style="
                           display:grid;
@@ -1190,7 +1191,7 @@
                         </button>
 
 
-                        <a href="#accounts-section"
+                        <a href="{{ path('admin_dashboard') }}#accounts-section"
                            class="btn-stock-add"
                            style="
                                background:#a89f91;
@@ -1335,35 +1336,40 @@
 
                                     {% else %}
 
-                                        <select name="new_role"
-                                                style="
-                                                    padding:3px 6px;
-                                                    font-size:12px;
-                                                    font-weight:600;
-                                                    border-radius:6px;
-                                                    border:1px solid;
-                                                    cursor:pointer;
-                                                    {{ role_badge }}
-                                                ">
+                                        <form action="{{ path('admin_dashboard') }}#accounts-section" method="POST" style="display:inline-block; margin:0;">
+                                            <input type="hidden" name="action" value="quick_change_role">
+                                            <input type="hidden" name="user_id" value="{{ usr.id }}">
+                                            <select name="new_role"
+                                                    onchange="this.form.submit()"
+                                                    style="
+                                                        padding:3px 6px;
+                                                        font-size:12px;
+                                                        font-weight:600;
+                                                        border-radius:6px;
+                                                        border:1px solid;
+                                                        cursor:pointer;
+                                                        {{ role_badge }}
+                                                    ">
 
-                                            <option value="customer"
-                                                {% if usr.role == 'customer' %}
-                                                    selected
-                                                {% endif %}
-                                            >
-                                                CUSTOMER
-                                            </option>
+                                                <option value="customer"
+                                                    {% if usr.role == 'customer' %}
+                                                        selected
+                                                    {% endif %}
+                                                >
+                                                    CUSTOMER
+                                                </option>
 
 
-                                            <option value="admin"
-                                                {% if usr.role == 'admin' %}
-                                                    selected
-                                                {% endif %}
-                                            >
-                                                ADMIN
-                                            </option>
+                                                <option value="admin"
+                                                    {% if usr.role == 'admin' %}
+                                                        selected
+                                                    {% endif %}
+                                                >
+                                                    ADMIN
+                                                </option>
 
-                                        </select>
+                                            </select>
+                                        </form>
 
                                     {% endif %}
 
@@ -1389,7 +1395,7 @@
                                 <!-- ACTIONS -->
                                 <td class="action-links">
 
-                                    <a href="#accounts-section"
+                                    <a href="{{ path('admin_dashboard', {'edit_user': usr.id}) }}#accounts-section"
                                        class="action-edit"
                                        title="Edit this user">
 
@@ -1413,8 +1419,9 @@
 
                                     {% else %}
 
-                                        <a href="#accounts-section"
+                                        <a href="{{ path('admin_dashboard', {'delete_user': usr.id}) }}#accounts-section"
                                            class="action-delete"
+                                           onclick="return confirm('Are you sure you want to delete user {{ usr.name|escape('js') }}?');"
                                            title="Delete this user">
 
                                             Delete

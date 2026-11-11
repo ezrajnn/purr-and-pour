@@ -28,7 +28,7 @@ class OrderItems
     private ?string $subtotal = null;
 
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'order_id', referencedColumnName: 'id', nullable: false)]
     private ?Orders $orderRef = null;
 
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
