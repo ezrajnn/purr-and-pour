@@ -12,13 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/products')]
-final class ProductsController extends AbstractController
+class ProductsController extends AbstractController
 {
-    #[Route(name: 'app_products_index', methods: ['GET'])]
+    #[Route('/', name: 'app_products_index', methods: ['GET'])]
     public function index(ProductsRepository $productsRepository): Response
     {
         return $this->render('products/index.html.twig', [
-            'products' => $productsRepository->findAll(),
+            'products' => $productsRepository->findBy([], ['id' => 'ASC']),
         ]);
     }
 
@@ -30,9 +30,13 @@ final class ProductsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$product->getCreatedAt()) {
+                $product->setCreatedAt(new \DateTimeImmutable());
+            }
             $entityManager->persist($product);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Product created successfully!');
             return $this->redirectToRoute('app_products_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -59,6 +63,7 @@ final class ProductsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
+            $this->addFlash('success', 'Product updated successfully!');
             return $this->redirectToRoute('app_products_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -71,9 +76,14 @@ final class ProductsController extends AbstractController
     #[Route('/{id}', name: 'app_products_delete', methods: ['POST'])]
     public function delete(Request $request, Products $product, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($product);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete'.$product->getId(), (string) $request->request->get('_token'))) {
+            try {
+                $entityManager->remove($product);
+                $entityManager->flush();
+                $this->addFlash('success', 'Product deleted.');
+            } catch (\Throwable $e) {
+                $this->addFlash('error', 'Cannot delete product (it may be referenced by existing orders).');
+            }
         }
 
         return $this->redirectToRoute('app_products_index', [], Response::HTTP_SEE_OTHER);
